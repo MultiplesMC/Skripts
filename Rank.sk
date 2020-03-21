@@ -99,14 +99,14 @@ command /system:rank [<Offline player=%player%>] [<text>]:
           set {staff.%UUID of argument 1%} to false
           send "&7Your rank was updated to &b&lMVP" to argument 1
           send "&7Succesfully changed &b%argument 1%&7's rank to &b&lMVP"
-          execute console command "manuadd %argument 1% Mvp all"
+          execute console command "manuadd %argument 1% MVP all"
         if argument 2 is "MVP+":
           set {rank.%UUID of argument 1%} to "MVP+"
           set {display.rank.%UUID of argument 1%} to "&6&lMVP+ &8&l≫"
           set {staff.%UUID of argument 1%} to false
           send "&7Your rank was updated to &6&lMVP+" to argument 1
           send "&7Succesfully changed &6%argument 1%&7's rank to &6&lMVP+"
-          execute console command "manuadd %argument 1% MVP+ all"
+          set group of arg-1 to "MVP+"
         if argument 2 is "MH":
           set {rank.%UUID of argument 1%} to "MH"
           set {display.rank.%UUID of argument 1%} to "&d&lMH &8&l≫"
