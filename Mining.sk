@@ -1,0 +1,546 @@
+variables:
+    {mined::%player%} = 0
+    {level::%player%} = 1
+    {exp:%player%} = 0
+    {token::%player%} = 0
+    {coal::%player%} = false
+    {iron::%player%} = false
+    {gold::%player%} = false
+    {lapis::%player%} = false
+    {redstone::%player%} = false
+    {diamond::%player%} = false
+
+options:
+	p: &8&l(&cMultiples&8&l)
+	ToolName: &7&o(&c&oPickaxe&7&o): &cLevel &7&o➤ &7&o%{Level::%player%}% &7&o➤ &cExp &7&o➤ &c%{Xp::%player%}%&7/&c100
+	ToolLore: ||&c&l&o&nStatistics:||&f||&cBlocks Mined &7&o➤ &7%{mined::%player%}%||&cPlayer &7&o➤ &7%player%||&cTokens &7&o➤ &7%{Tokens::%player%}%||
+
+on load:
+	set {blocklist::*} to stone, coal ore, iron ore, gold ore, redstone ore, lapis lazuli ore, diamond ore and emerald ore
+
+on rightclick holding a pickaxe:
+	open chest with 3 rows named "&7&l➤ &c&oBlacksmith" to player
+	format slot 10 of player with sunflower named "&c➤ &aSell Ores &7&o(Left-Click)" with lore "&7" and "&7&nThis will sell all of your ores" and "&7" to run [make player execute command "/sell"]
+	format gui slot 11 of player with diamond sword named "&c➤ &7Sharpness &7&o(Left-Click)" with lore "&c&o(200 tokens)" and "" and "&7Increases your pickaxe's damage" to run function enchantSharp(player, 200)
+	format gui slot 12 of player with golden apple named "&c➤ &7Health &7&o(Left-Click)" with lore "&c&o(350 tokens)" and "" and "&7Increases your health while holding your pickaxe" and "&7" to run function enchantHealth(player, 350)
+	format gui slot 13 of player with wither skeleton skull named "&c➤ &7Wither &7&o(Left-Click)" with lore "&c&o(500 tokens)" and "" and "&7Gives player Wither effect" and "&7" to run function enchantWither(player, 500)
+	format gui slot 14 of player with enchanted book named "&c➤ &7Efficiency &7&o(Left-Click)" with lore "&c&o(50 tokens)" and "" and "&7Increases how fast you mine" and "&7" to run function enchantEff(player, 50)
+	format gui slot 15 of player with enchanted book named "&c➤ &7Fortune &7&o(Left-Click)" with lore "&c&o(75 tokens)" and "" and "&7Increases the blocks you get from mining" and "&7" to run function enchantFor(player, 75)
+	format gui slot 16 of player with rabbit foot named "&c➤ &7Lucky &7&o(Left-Click)" with lore "&c&o(150 tokens)" and "" and "&7Increases the chance to get tokens" and "&7" to run function enchantLuck(player, 150)
+	format gui slot 22 of player with dragon breath named "&c➤ &7Sorcerer &7&o(Left-Click)" with lore "&c&o(300 tokens)" and "" and "&7Increases the chance to gain more Xp while mining" and "&7" to run function enchantSource(player, 300)
+#	format gui slot 4 of player with prismarine shard named "&c➤ &7Crate Finder &7&o(Left-Click)" with lore "&c&o(450 tokens)" and "" and "&7Increases the chance of finding crate keys" and "&7" to run function enchantCrate(player, 450)
+
+function enchantSharp(p: player, price: integer):
+	if {Tokens::%{_p}%} >= {_price}:
+		if lore of tool of {_p} doesn't contain "Sharpness":
+			set line 7 of lore of tool of {_p} to "&7Sharpness 1"
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Sharpness 1":
+			set line 7 of lore of tool of {_p} to "&7Sharpness 2"
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Sharpness 2":
+			set line 7 of lore of tool of {_p} to "&7Sharpness 3"
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Sharpness 3":
+			set line 7 of lore of tool of {_p} to "&7Sharpness 4"
+			subtract {_price} from {Tokens::%{_p}%}
+		else:
+			send "{@p} &cYou already have the max sharpness enchant" to {_p}
+	else:
+		send "{@p} &cYou don't have enough tokens for this" to {_p}
+
+function enchantCrate(p: player, price: integer):
+	if {Tokens::%{_p}%} >= {_price}:
+		if lore of tool of {_p} doesn't contain "Crate Finder":
+			set line 12 of lore of tool of {_p} to "&7Crate Finder 1"
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Crate Finder 1":
+			set line 12 of lore of tool of {_p} to "&7Crate Finder 2"
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Crate Finder 2":
+			set line 12 of lore of tool of {_p} to "&7Crate Finder 3"
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Crate Finder 3":
+			set line 12 of lore of tool of {_p} to "&7Crate Finder 4"
+			subtract {_price} from {Tokens::%{_p}%}
+		else:
+			send "{@p} &cYou already have the max crate finder enchant" to {_p}
+	else:
+		send "{@p} &cYou don't have enough tokens for this" to {_p}
+
+function enchantHealth(p: player, price: integer):
+	if {Tokens::%{_p}%} >= {_price}:
+		if lore of tool of {_p} doesn't contain "Health":
+			set line 8 of lore of tool of {_p} to "&7Health 1"
+			set max health of {_p} to 12
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Health 1":
+			set line 8 of lore of tool of {_p} to "&7Health 2"
+			set max health of {_p} to 14
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Health 2":
+			set line 8 of lore of tool of {_p} to "&7Health 3"
+			set max health of {_p} to 16
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Health 3":
+			set line 8 of lore of tool of {_p} to "&7Health 4"
+			set max health of {_p} to 18
+			subtract {_price} from {Tokens::%{_p}%}
+		else:
+			send "{@p} &cYou already have the max health enchant" to {_p}
+		
+	else:
+		send "{@p} &cYou don't have enough tokens for this" to {_p}
+
+function enchantWither(p: player, price: integer):
+	if {Tokens::%{_p}%} >= {_price}:
+		if lore of tool of {_p} doesn't contain "Wither":
+			set line 9 of lore of tool of {_p} to "&7Wither 1"
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Wither 1":
+			set line 9 of lore of tool of {_p} to "&7Wither 2"
+			subtract {_price} from {Tokens::%{_p}%}
+		else:
+			send "{@p} &cYou already have the max wither enchant" to {_p}
+		
+	else:
+		send "{@p} &cYou don't have enough tokens for this" to {_p}
+
+function enchantEff(p: player, price: integer):
+	if {Tokens::%{_p}%} >= {_price}:
+		if level of efficiency of tool of {_p} is set:
+			if level of efficiency of tool of {_p} < 4:
+				if tool of {_p} is not enchanted with efficiency:
+					enchant tool of {_p} with efficiency 1
+					subtract {_price} from {Tokens::%{_p}%}
+				else:
+					set {_elvl} to (level of efficiency of tool of {_p} + 1)
+					enchant tool of {_p} with "efficiency %{_elvl}%" parsed as enchantment type
+					subtract {_price} from {Tokens::%{_p}%}
+			else:
+				send "{@p} &cYou already have the max efficiency enchant" to {_p}
+		else:
+			enchant tool of {_p} with efficiency 1
+			subtract {_price} from {Tokens::%{_p}%}
+	else:
+		send "{@p} &cYou don't have enough tokens for this" to {_p}
+
+function enchantFor(p: player, price: integer):
+	if {Tokens::%{_p}%} >= {_price}:
+		if level of fortune of tool of {_p} is set:
+			if level of fortune of tool of {_p} < 10:
+				if tool of {_p} is not enchanted with fortune:
+					enchant tool of {_p} with fortune 1
+					subtract {_price} from {Tokens::%{_p}%}
+				else:
+					set {_flvl} to (level of fortune of tool of {_p} + 1)
+					enchant tool of {_p} with "fortune %{_flvl}%" parsed as enchantment type
+					subtract {_price} from {Tokens::%{_p}%}
+			else:
+				send "{@p} &cYou already have the max fortune enchant" to {_p}
+		else:
+			enchant tool of {_p} with fortune 1
+			subtract {_price} from {Tokens::%{_p}%}
+	else:
+		send "{@p} &cYou don't have enough tokens for this" to {_p}
+
+function enchantLuck(p: player, price: integer):
+	if {Tokens::%{_p}%} >= {_price}:
+		if lore of tool of {_p} doesn't contain "Lucky":
+			set line 10 of lore of tool of {_p} to "&7Lucky 1"
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Lucky 1":
+			set line 10 of lore of tool of {_p} to "&7Lucky 2"
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Lucky 2":
+			set line 10 of lore of tool of {_p} to "&7Lucky 3"
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Lucky 3":
+			set line 10 of lore of tool of {_p} to "&7Lucky 4"
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Lucky 4":
+			set line 10 of lore of tool of {_p} to "&7Lucky 5"
+			subtract {_price} from {Tokens::%{_p}%}
+		else:
+			send "{@p} &cYou already have the max lucky enchant" to {_p}	
+	else:
+		send "{@p} &cYou don't have enough tokens for this" to {_p}
+
+function enchantSource(p: player, price: integer):
+	if {Tokens::%{_p}%} >= {_price}:
+		if lore of tool of {_p} doesn't contain "Sorcerer":
+			set line 11 of lore of tool of {_p} to "&7Sorcerer 1"
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Sorcerer 1":
+			set line 11 of lore of tool of {_p} to "&7Sorcerer 2"
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Sorcerer 2":
+			set line 11 of lore of tool of {_p} to "&7Sorcerer 3"
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Sorcerer 3":
+			set line 11 of lore of tool of {_p} to "&7Sorcerer 4"
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Sorcerer 3":
+			set line 11 of lore of tool of {_p} to "&7Sorcerer 4"
+			subtract {_price} from {Tokens::%{_p}%}
+		else if lore of tool of {_p} contains "Sorcerer 4":
+			set line 11 of lore of tool of {_p} to "&7Sorcerer 5"
+			subtract {_price} from {Tokens::%{_p}%}
+		else:
+			send "{@p} &cYou already have the max sorcerer enchant" to {_p}	
+	else:
+		send "{@p} &cYou don't have enough tokens for this" to {_p}
+
+function tokenAmt(p: player) :: integer:
+	if lore of tool of {_p} doesn't contain "Lucky":
+		return 1
+	else if lore of tool of {_p} contains "Lucky 1":
+		return 2
+	else if lore of tool of {_p} contains "Lucky 2":
+		return 3
+	else if lore of tool of {_p} contains "Lucky 3":
+		return 4
+	else if lore of tool of {_p} contains "Lucky 4":
+		return 6
+	else if lore of tool of {_p} contains "Lucky 5":
+		return 6
+
+on mine:
+	if {blocklist::*} contains event-block:
+		player's tool is pickaxe
+		chance of 6%:
+			set {_amt} to tokenAmt(player)
+			add {_amt} to {Tokens::%player%}
+			send "&7&l* &cFound %{_amt}% tokens while mining!"
+		if lore of tool of player contains "Crate Finder 1":
+			chance of 5%:
+				give 2 prismarine shard named "&7&l(&c&l!&7&l) &7&nCrate Key" to player
+				send "&7&l* &cFound a &7&oCrate Key &cwhile mining"
+			chance of 2%:
+				give 2 prismarine shard named "&7&l(&c&l!&7&l) &4&nCrate Key" to player
+				send "&7&l* &cFound a &4&oCrate Key &cwhile mining"
+		if lore of tool of player contains "Crate Finder 2":
+			chance of 5%:
+				give 3 prismarine shard named "&7&l(&c&l!&7&l) &7&nCrate Key" to player
+				send "&7&l* &cFound a &7&oCrate Key &cwhile mining"
+			chance of 2%:
+				give 3 prismarine shard named "&7&l(&c&l!&7&l) &4&nCrate Key" to player
+				send "&7&l* &cFound a &4&oCrate Key &cwhile mining"
+		if lore of tool of player contains "Crate Finder 3":
+			chance of 5%:
+				give 4 prismarine shard named "&7&l(&c&l!&7&l) &7&nCrate Key" to player
+				send "&7&l* &cFound a &7&oCrate Key &cwhile mining"
+			chance of 2%:
+				give 4 prismarine shard named "&7&l(&c&l!&7&l) &4&nCrate Key" to player
+				send "&7&l* &cFound a &4&oCrate Key &cwhile mining"
+		if lore of tool of player contains "Crate Finder 4":
+			chance of 5%:
+				give 5 prismarine shard named "&7&l(&c&l!&7&l) &7&nCrate Key" to player
+				send "&7&l* &cFound a &7&oCrate Key &cwhile mining"
+			chance of 2%:
+				give 5 prismarine shard named "&7&l(&c&l!&7&l) &4&nCrate Key" to player
+				send "&7&l* &cFound a &4&oCrate Key &cwhile mining"
+		else:
+			chance of 5%:
+				give 1 prismarine shard named "&7&l(&c&l!&7&l) &7&nCrate Key" to player
+				send "&7&l* &cFound a &7&oCrate Key &cwhile mining"
+			chance of 2%:
+				give 1 prismarine shard named "&7&l(&c&l!&7&l) &4&nCrate Key" to player
+				send "&7&l* &cFound a &4&oCrate Key &cwhile mining"
+
+on drop:
+	if event-item is diamond pickaxe:
+		send ""
+		send "{@p} &7You cannot drop your pickaxe"
+		send ""
+		cancel event
+
+on mine:
+	if {Xp::%player%} >= 100:
+		if {Level::%player%} < 1000:
+			add 1 to {Level::%player%}
+			set {Xp::%player%} to 0
+			send ""
+			send "&7&o➤ &7Leveled up to level &c&o%{Level::%player%}%"
+			send ""
+
+on death:
+	if {Xp::%attacker%} >= 100:
+		if {Level::%attacker%} < 1000:
+			add 1 to {Level::%attacker%}
+			set {Xp::%player%} to 0
+			send ""
+			send "&7&o➤ &7Leveled up to level &c&o%{Level::%player%}%"
+			send ""		
+
+function getXP(p: player) :: integer:
+	if lore of tool of {_p} doesn't contain "Sorcerer":
+		return 1
+	else if lore of tool of {_p} contains "Sorcerer 1":
+		return 2
+	else if lore of tool of {_p} contains "Sorcerer 2":
+		return 3
+	else if lore of tool of {_p} contains "Sorcerer 3":
+		return 4
+	else if lore of tool of {_p} contains "Sorcerer 4":
+		return 5
+	else if lore of tool of {_p} contains "Sorcerer 5":
+		return 6
+			
+
+every 2 second in "ul_S31":
+	loop all players:
+		if {coal::%loop-player%} is false:
+			if {Level::%loop-player%} >= 10:
+				set {coal::%loop-player%} to true
+				send "" to loop-player
+				send "&7&o* &cUnlocked &8Coal&c!" to loop-player
+				send "" to loop-player
+		if {iron::%loop-player%} is false:
+			if {Level::%loop-player%} >= 50:
+				set {iron::%loop-player%} to true
+				send "" to loop-player
+				send "&7&o* &cUnlocked &fIron&c!" to loop-player
+				send "" to loop-player
+		if {gold::%loop-player%} is false:
+			if {Level::%loop-player%} >= 100:
+				set {gold::%loop-player%} to true
+				send "" to loop-player
+				send "&7&o* &cUnlocked &eGold&c!" to loop-player
+				send "" to loop-player
+		if {lapis::%loop-player%} is false:
+			if {Level::%loop-player%} >= 200:
+				set {lapis::%loop-player%} to true
+				send "" to loop-player
+				send "&7&o* &cUnlocked &3Lapis&c!" to loop-player
+				send "" to loop-player
+		if {redstone::%loop-player%} is false:
+			if {Level::%loop-player%} >= 350:
+				set {redstone::%loop-player%} to true
+				send "" to loop-player
+				send "&7&o* &cUnlocked &4Redstone&c!" to loop-player
+				send "" to loop-player
+		if {diamond::%loop-player%} is false:
+			if {Level::%loop-player%} >= 500:
+				set {diamond::%loop-player%} to true
+				send "" to loop-player
+				send "&7&o* &cUnlocked &bDiamond&c!" to loop-player
+				send "" to loop-player
+on mine:
+	world is "ul_S31"
+	if player's gamemode is survival:
+		if {blocklist::*} contains event-block:
+			if world is "ul_S31":
+				if player is holding a pickaxe:
+
+					if event-block is stone:
+						add 1 to {Quests.stone::%player%}
+						if {Quests.1::%player%} is false:
+							if {Quests.stone::%player%} is 100:
+								set {Quests.1::%player%} to true
+								message "{@p} &aYou have completed a quest! Do &b/quests &ato view quests!"
+								delete {Quests.stone::%player%}
+								checkQuests(player)
+								add 50 to {Tokens::%player%}
+
+						if {Quests.2::%player%} is false:
+							if {Quests.stone::%player%} is 350:
+								set {Quests.2::%player%} to true
+								message "{@p} &aYou have completed a quest! Do &b/quests &ato view quests!"
+								delete {Quests.stone::%player%}
+								checkQuests(player)
+								add 75 to {Tokens::%player%}
+
+
+					if event-block is coal ore:
+						if {Quests.3::%player%} is false:
+							if {Quests.coal::%player%} is 150:
+								set {Quests.3::%player%} to true
+								message "{@p} &aYou have completed a quest! Do &b/quests &ato view quests!"
+								delete {Quests.coal::%player%}
+								checkQuests(player)
+								add 100 to {Tokens::%player%}
+
+						if {Quests.4::%player%} is false:
+							if {Quests.coal::%player%} is 250:
+								set {Quests.4::%player%} to true
+								message "{@p} &aYou have completed a quest! Do &b/quests &ato view quests!"
+								delete {Quests.coal::%player%}
+								checkQuests(player)
+								add 125 to {Tokens::%player%}
+
+
+					if event-block is iron ore:
+						if {Quests.5::%player%} is false:
+							if {Quests.iron::%player%} is 250:
+								set {Quests.5::%player%} to true
+								message "{@p} &aYou have completed a quest! Do &b/quests &ato view quests!"
+								delete {Quests.iron::%player%}
+								checkQuests(player)
+								add 150 to {Tokens::%player%}
+
+
+					if event-block is gold ore:
+						if {Quests.6::%player%} is false:
+							if {Quests.gold::%player%} is 350:
+								set {Quests.6::%player%} to true
+								message "{@p} &aYou have completed a quest! Do &b/quests &ato view quests!"
+								delete {Quests.gold::%plgolayer%}
+								checkQuests(player)
+								add 215 to {Tokens::%player%}
+
+
+
+					set {_amt} to 1 + (1 * level of fortune of tool of player)
+					if event-block is gold ore:
+						if {gold::%player%} is true:
+							set event-block to light blue clay
+							cancel drops		
+							give {_amt} of gold ingot to player
+							add 1 to {mined::%player%}
+							add (6 + getXP(player)) * getMultiplier(player) to {Xp::%player%}
+							wait 25 seconds
+							set event-block to gold ore
+						else:
+							send "&7&o* &cYou need to be level 100 to do this"
+							cancel event
+					if event-block is coal ore:
+						if {coal::%player%} is true:
+							set event-block to light blue clay
+							cancel drops
+							give {_amt} of coal to player
+							add 1 to {mined::%player%}
+							add (3 + getXP(player)) * getMultiplier(player) to {Xp::%player%}
+							wait 15 seconds
+							set event-block to coal ore
+							show mob spawner flames at event-block
+						else:
+							send "&7&o* &cYou need to be level 10 to do this"
+							cancel event
+					if event-block is iron ore:
+						if {iron::%player%} is true:
+							set event-block to light blue clay
+							cancel drops
+							give {_amt} of iron ingot to player
+							add 1 to {mined::%player%}
+							add (5 + getXP(player)) * getMultiplier(player) to {Xp::%player%}
+							wait 20 seconds
+							set event-block to iron ore
+							show mob spawner flames at event-block
+						else:
+							send "&7&o* &cYou need to be level 50 to do this"
+							cancel event
+					if event-block is diamond ore:
+						if {diamond::%player%} is true:
+							set event-block to light blue clay
+							cancel drops
+							give {_amt} of diamond to player
+							add 1 to {mined::%player%}
+							add (20 + getXP(player)) * getMultiplier(player) to {Xp::%player%}
+							wait 60 seconds
+							set event-block to diamond ore
+							show mob spawner flames at event-block
+						else:
+							send "&7&o* &cYou need to be level 500 to do this"
+							cancel event
+					if event-block is lapis lazuli ore:
+						if {lapis::%player%} is true:
+							set event-block to light blue clay
+							cancel drops
+							give {_amt} of lapis lazuli to player
+							add 1 to {mined::%player%}
+							add (12 + getXP(player)) * getMultiplier(player) to {Xp::%player%}
+							wait 15 seconds
+							set event-block to lapis lazuli ore
+							show mob spawner flames at event-block
+						else:
+							send "&7&o* &cYou need to be level 200 to do this"
+							cancel event
+					if event-block is redstone ore:
+						if {redstone::%player%} is true:
+							set event-block to light blue clay
+							cancel drops
+							give {_amt} of redstone to player
+							add 1 to {mined::%player%}
+							add (9 + getXP(player)) * getMultiplier(player) to {Xp::%player%}
+							wait 20 seconds
+							set event-block to redstone ore
+							show mob spawner flames at event-block
+						else:
+							send "&7&o &cYou need to be level 350 to do this"
+							cancel event
+					if event-block is stone:
+						set event-block to light blue clay
+						cancel drops
+						give {_amt} of cobblestone to player
+						add 1 to {mined::%player%}
+						add (2 + getXP(player)) * getMultiplier(player) to {Xp::%player%}
+						wait 20 seconds
+						set event-block to stone
+		else:
+			cancel event
+on break:
+	if world is "ul_S31":
+		if event-block is mushroom stem:
+			cancel event
+on mine:
+	if player is holding a pickaxe:
+		repair tool of player
+		set name of tool of player to "{@ToolName}"
+		if line 7 of lore of tool of player is set:
+			add line 7 of lore of tool of player to {_lore::*}
+		if line 8 of lore of tool of player is set:
+			add line 8 of lore of tool of player to {_lore::*}
+		if line 9 of lore of tool of player is set:
+			add line 9 of lore of tool of player to {_lore::*}
+		if line 10 of lore of tool of player is set:
+			add line 10 of lore of tool of player to {_lore::*}
+		if line 11 of lore of tool of player is set:
+			add line 11 of lore of tool of player to {_lore::*}
+		if {_lore::*} is set:
+			set {_l} to join {_lore::*} with "||"
+			set lore of tool of player to "{@ToolLore}%{_l}%"
+		else:
+			set lore of tool of player to "{@ToolLore}"
+
+on damage:
+	attacker is player
+	if attacker is holding a pickaxe:
+		if lore of tool of attacker contains "Sharpness 1":
+			increase the damage by 1
+		else if lore of tool of attacker contains "Sharpness 2":
+			increase the damage by 1.5
+		else if the lore of tool of attacker contains "Sharpness 3":
+			increase the damage by 2
+		else if the lore of tool of attacker contains "Sharpness 4":
+			increase the damage by 2.5
+		else if the lore of tool of attacker contains "Sharpness 5":
+			increase the damage by 3
+		if lore of tool of attacker contains "Wither 1":
+			apply potion of wither of tier 1 to the victim for 2 seconds
+		else if lore of tool of attacker contains "Wither 2":
+			apply potion of wither of tier 1 to the victim for 5 seconds
+
+on hotbar switch:
+	if player's held item is pickaxe:
+		if the lore of tool of player contains "Health":
+			if lore of tool of player contains "Health 1":
+				set max health of player to 12
+			else if lore of tool of player contains "Health 2":
+				set max health of player to 14
+			else if lore of tool of player contains "Health 3":
+				set max health of player to 16
+			else if lore of tool of player contains "Health 4":
+				set max health of player to 18
+	else:
+		set max health of player to 10
+
+
+every second:
+	loop all players in world "ul_S31":
+		if loop-player's max health > 18:
+			set loop-player's max health to 10
+		tool of loop-player is not pickaxe
+		lore of tool of loop-player does not contain "Health"
+		if loop-player's max health > 10:
+			set loop-player's max health to 10

@@ -1,0 +1,103 @@
+command /holoset [<text>]:
+    permission: rank.admin
+    trigger:
+        if arg-1 is not set:
+            send "&c/holoset <prestige/level/balance>"
+        else if arg-1 is "prestige":
+            create new holo with line "&7» &c&lPrestige Leaderboard &7«" and store in {prestige_lbs::*}
+            send "&aCreated a new hologram with id &c%size of {prestige_lbs::*}%"
+        else if arg-1 is "level":
+            create new holo with line "&7» &c&lLevel Leaderboard &7«" and store in {lvl_lbs::*}
+            send "&aCreated a new hologram with id &c%size of {lvl_lbs::*}%"
+
+command /holoremove [<text>] [<text>]:
+    permission: rank.admin
+    trigger:
+        if arg-1 is not set:
+            send "&c/holoremove <prestige/level/balance> <id>"
+        else if arg-2 is not set:
+            send "&c/holoremove <prestige/level/balance> <id>"
+        else if arg-1 is "prestige":
+            delete hologram {prestige_lbs::%arg-2%}
+            delete {prestige_lbs::%arg-2%}
+            send "&aDeleted hologram with ID &c%arg-2%"
+        else if arg-1 is "level":
+            delete hologram {lvl_lbs::%arg-2%}
+            delete {lvl_lbs::%arg-2%}
+            send "&aDeleted hologram with ID &c%arg-2%"
+
+
+command /autorefresh [<text>] [<boolean>]:
+    permission: rank.admin
+    trigger:
+        if arg-1 is not set:
+            send "&c/autorefresh <prestige/level/balance> <true/false>"
+        else if arg-2 is not set:
+            send "&c/autorefresh <prestige/level/balance> <true/false>"
+        else if arg-1 is "prestige":
+            send "&7Toggled autorefesh &c%arg-2% &7for &c%arg-1%"
+            set {refreshprestige} to arg-2
+        else if arg-1 is "level":
+            send "&7Toggled autorefesh &c%arg-2% &7for &c%arg-1%"
+            set {refreshlevel} to arg-2
+
+
+command /forcerefresh [<text>]:
+    permission: rank.admin
+    trigger:
+        if arg-1 is not set:
+            send "&c/forcerefresh <prestige/level/balance>"
+        else if arg-1 is "prestige":
+            send "&7Force refreshing prestige leaderboard"
+            broadcast " "
+            broadcast "&8Refreshing prestige leaderboard"
+            broadcast "&7(This may cause lag)"
+            broadcast " "
+            refreshPrestigeLB()
+        else if arg-1 is "level":
+            send "&7Force refreshing level leaderboard"
+            broadcast " "
+            broadcast "&8Refreshing level leaderboard"
+            broadcast "&7(This may cause lag)"
+            broadcast " "
+            refreshLevelLB()
+
+
+every 5 minutes:
+    if {refreshlevel} is true:
+        if {lvl_lbs::*} is not empty:
+            broadcast " "
+            broadcast "&8Refreshing level leaderboard"
+            broadcast "&7(This may cause lag)"
+            broadcast " "
+            refreshLevelLB()
+    wait 1 minute
+    if {refreshprestige} is true:
+        if {prestige_lbs::*} is not empty:
+            broadcast " "
+            broadcast "&8Refreshing prestige leaderboard"
+            broadcast "&7(This may cause lag)"
+            broadcast " "
+            refreshPrestigeLB()
+
+function refreshLevelLB():
+    set {_slevels::*} to sorted {Level::*} from highest to lowest with format "@index"
+    set {_ind} to 0
+    loop {lvl_lbs::*}:
+        loop {_slevels::*}:
+            if {_ind} < 10:
+                add 1 to {_ind}
+                set {_pl} to "%loop-value-2 parsed as offline player%"
+                set {_ul} to {Level::%loop-value-2%}
+                set line (1 + {_ind}) of loop-value-1 to "&4&l%{_ind}%&7. &f%{_pl}%&7: [&c%{_ul}%&7]"
+
+function refreshPrestigeLB():
+    set {_sprestige::*} to sorted {Prestige::*} from highest to lowest with format "@index"
+    set {_ind} to 0
+    loop {prestige_lbs::*}:
+        loop {_sprestige::*}:
+            if {_ind} < 10:
+                add 1 to {_ind}
+                set {_pl} to "%loop-value-2 parsed as offline player%"
+                set {_ul} to {Prestige::%loop-value-2%}
+                set line (1 + {_ind}) of loop-value-1 to "&4&l%{_ind}%&7. &f%{_pl}%&7: [&c&l%{_ul}%&7]"

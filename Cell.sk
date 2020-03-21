@@ -1,0 +1,284 @@
+#
+#
+#   Cells | Multiples
+#
+#
+
+options:
+	p: &7(&cMultiples&7)
+
+
+on join:
+	if {levelcell::%player%} is not set:
+		set {levelcell::%player%} to 1
+	if {CellProfit.%player%} is not set:
+		set {CellProfit.%player%} to 1
+
+function checkcellXP(p: player): 
+	if {cellXP::%{_p}%} >= 100:
+		add 1 to {levelcell::%{_p}%}
+		set {cellXP::%{_p}%} to 0
+		send "{@p} &aYou have reached cell level %{levelcell::%{_p}%}%&a!" to {_p}
+
+function openCell(p: player, i: integer):
+	if {levelcell::%{_p}%} is not set:
+		set {levelcell::%{_p}%} to 1
+	if {cellXP::%{_p}%} is not set:
+		set {cellXP::%{_p}%} to 0
+	if {_i} is 0:
+		open chest with 3 rows named "&8» &bCells" to {_p}
+		set {_slot} to -1
+		loop 11 times:
+			add 1 to {_slot}
+			format gui slot {_slot} of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 12 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 14 of {_p} with gray glass pane named "&7" to do nothing
+		set {_slot} to 15
+		loop 11 times:
+			add 1 to {_slot}
+			format gui slot {_slot} of {_p} with gray glass pane named "&7" to do nothing
+		wait 3 ticks
+		format gui slot 11 of {_p} with furnace named "&cCell Upgrades" with lore "" and "&7Stand in a cell to generate income!" and "" to run:
+			close {_p}'s inventory
+			openCell({_p}, 1)
+		if {Earnings::%{_p}%} is not set:
+			format gui slot 13 of {_p} with bucket named "&cCollect Earnings" with lore "" and "&7Vault: &a$0" and "" to run:
+				send "{@p} &cYou do not have any money in your vault!" to {_p}
+		else:
+			format gui slot 13 of {_p} with water bucket named "&cCollect Earnings" with lore "" and "&7Vault: &a$&a%{Earnings::%{_p}%}%" and "" and "&7Click to collect" and "" to run:
+				set {_amt} to {Earnings::%{_p}%}
+				send "{@p} &aYou collected $&a%{_amt}% &afrom your vault!" to {_p}
+				add 5 to {cellXP::%{_p}%}
+				checkcellXP({_p})
+				add {_amt} to player's balance
+				delete {Earnings::%{_p}%}
+				openCell({_p}, 0)
+				if {Excavator.%{_p}%} is true:
+					chance of 10%:
+						give 1 prismarine shard named "&7&l(&c&l!&7&l) &6&nCrate Key" to {_p}
+						send "{@p} &aYou have gained a &7&l(&c!&7&l) &6Crate Key &a(Tier 3)!" to {_p}
+		format gui slot 15 of {_p} with shiny emerald named "&cCell Level %{levelcell::%{_p}%}%" with lore "" and "&c● &7EXP: %{cellXP::%{_p}%}%&7/100" and "" to do nothing
+
+	if {_i} is 1:
+		open chest with 3 rows named "&8» &bCell Upgrades" to {_p}
+		set {_slot} to -1
+		loop 11 times:
+			add 1 to {_slot}
+			format gui slot {_slot} of {_p} with gray glass pane named "&7" to do nothing
+		set {_slot} to 11
+		loop 3 times:
+			add 1 to {_slot}
+			format gui slot {_slot} of {_p} with gray glass pane named "&7" to do nothing
+		set {_slot} to 15
+		loop 11 times:
+			add 1 to {_slot}
+			format gui slot {_slot} of {_p} with gray glass pane named "&7" to do nothing
+		wait 3 ticks
+
+		if {CellProfit.%{_p}%} is 1:
+			format gui slot 11 of {_p} with iron ingot named "&cProfit Per Minute &7(&cLevel I&7)" with lore "" and "&7Current Profit: $150/minute" and "" and "&aUpgrade: 60%%" and "&aCost: 200 Tokens" and "" and "&7Click to purchase" and "" to run:
+				close {_p}'s inventory
+				if {Tokens::%{_p}%} >= 200:
+					remove 200 from {Tokens::%{_p}%}
+					send "{@p} &aYou successfully purchased &cProfit Per Minute &7(&cLevel II&7)" to {_p}
+					add 1 to {CellProfit.%{_p}%}
+					openCell({_p}, 1)
+				else:
+					send "{@p} &cYou do not have enough tokens for this!" to {_p}
+
+		if {CellProfit.%{_p}%} is 2:
+			format gui slot 11 of {_p} with iron ingot named "&cProfit Per Minute &7(&cLevel II&7)" with lore "" and "&7Current Profit: $240/minute" and "" and "&aUpgrade: 120%%" and "&aCost: 400 Tokens" and "" and "&7Click to purchase" and "" to run:
+				close {_p}'s inventory
+				if {Tokens::%{_p}%} >= 400:
+					remove 400 from {Tokens::%{_p}%}
+					send "{@p} &aYou successfully purchased &cProfit Per Minute &7(&cLevel III&7)" to {_p}
+					add 1 to {CellProfit.%{_p}%}
+					openCell({_p}, 1)
+				else:
+					send "{@p} &cYou do not have enough tokens for this!" to {_p}
+
+		if {CellProfit.%{_p}%} is 3:
+			format gui slot 11 of {_p} with iron ingot named "&cProfit Per Minute &7(&cLevel III&7)" with lore "" and "&7Current Profit: $330/minute" and "" and "&aUpgrade: 180%%" and "&aCost: 600 Tokens" and "" and "&7Click to purchase" and "" to run:
+				close {_p}'s inventory
+				if {Tokens::%{_p}%} >= 600:
+					remove 600 from {Tokens::%{_p}%}
+					send "{@p} &aYou successfully purchased &cProfit Per Minute &7(&cLevel IV&7)" to {_p}
+					add 1 to {CellProfit.%{_p}%}
+					openCell({_p}, 1)
+				else:
+					send "{@p} &cYou do not have enough tokens for this!" to {_p}
+
+		if {CellProfit.%{_p}%} is 4:
+			format gui slot 11 of {_p} with iron ingot named "&cProfit Per Minute &7(&cLevel IV&7)" with lore "" and "&7Current Profit: $420/minute" and "" and "&aUpgrade: 240%%" and "&aCost: 800 Tokens" and "" and "&7Click to purchase" and "" to run:
+				close {_p}'s inventory
+				if {Tokens::%{_p}%} >= 800:
+					remove 800 from {Tokens::%{_p}%}
+					send "{@p} &aYou successfully purchased &cProfit Per Minute &7(&cLevel V&7)" to {_p}
+					add 1 to {CellProfit.%{_p}%}
+					openCell({_p}, 1)
+				else:
+					send "{@p} &cYou do not have enough tokens for this!" to {_p}
+
+		if {CellProfit.%{_p}%} is 5:
+			format gui slot 11 of {_p} with iron ingot named "&cProfit Per Minute &7(&cLevel V&7)" with lore "" and "&7Current Profit: $510/minute" and "" and "&aUpgrade: 300%%" and "&aCost: 1000 Tokens" and "" and "&7Click to purchase" and "" to run:
+				close {_p}'s inventory
+				if {Tokens::%{_p}%} >= 1000:
+					remove 1000 from {Tokens::%{_p}%}
+					send "{@p} &aYou successfully purchased &cProfit Per Minute &7(&cLevel VI&7)" to {_p}
+					add 1 to {CellProfit.%{_p}%}
+					openCell({_p}, 1)
+				else:
+					send "{@p} &cYou do not have enough tokens for this!" to {_p}
+
+		if {CellProfit.%{_p}%} is 6:
+			format gui slot 11 of {_p} with iron ingot named "&cProfit Per Minute &7(&cLevel VI&7)" with lore "" and "&7Current Profit: $600/minute" and "" and "&aUpgrade: 360%%" and "&aCost: 1200 Tokens" and "" and "&7Click to purchase" and "" to run:
+				close {_p}'s inventory
+				if {Tokens::%{_p}%} >= 1200:
+					remove 1200 from {Tokens::%{_p}%}
+					send "{@p} &aYou successfully purchased &cProfit Per Minute &7(&cLevel VII&7)" to {_p}
+					add 1 to {CellProfit.%{_p}%}
+					openCell({_p}, 1)
+				else:
+					send "{@p} &cYou do not have enough tokens for this!" to {_p}
+
+		if {CellProfit.%{_p}%} is 7:
+			format gui slot 11 of {_p} with iron ingot named "&cProfit Per Minute &7(&cLevel VII&7)" with lore "" and "&7Current Profit: $690/minute" and "" and "&aUpgrade: 420%%" and "&aCost: 1400 Tokens" and "" and "&7Click to purchase" and "" to run:
+				close {_p}'s inventory
+				if {Tokens::%{_p}%} >= 1400:
+					remove 1400 from {Tokens::%{_p}%}
+					send "{@p} &aYou successfully purchased &cProfit Per Minute &7(&cLevel VIII&7)" to {_p}
+					add 1 to {CellProfit.%{_p}%}
+					openCell({_p}, 1)
+				else:
+					send "{@p} &cYou do not have enough tokens for this!" to {_p}
+
+		if {CellProfit.%{_p}%} is 8:
+			format gui slot 11 of {_p} with iron ingot named "&cProfit Per Minute &7(&cLevel VIII&7)" with lore "" and "&7Current Profit: $780/minute" and "" and "&aUpgrade: 480%%" and "&aCost: 1600 Tokens" and "" and "&7Click to purchase" and "" to run:
+				close {_p}'s inventory
+				if {Tokens::%{_p}%} >= 1600:
+					remove 1600 from {Tokens::%{_p}%}
+					send "{@p} &aYou successfully purchased &cProfit Per Minute &7(&cLevel IX&7)" to {_p}
+					add 1 to {CellProfit.%{_p}%}
+					openCell({_p}, 1)
+				else:
+					send "{@p} &cYou do not have enough tokens for this!" to {_p}
+
+		if {CellProfit.%{_p}%} is 9:
+			format gui slot 11 of {_p} with iron ingot named "&cProfit Per Minute &7(&cLevel IX&7)" with lore "" and "&7Current Profit: $870/minute" and "" and "&aUpgrade: 540%%" and "&aCost: 1800 Tokens" and "" and "&7Click to purchase" and "" to run:
+				close {_p}'s inventory
+				if {Tokens::%{_p}%} >= 1800:
+					remove 1800 from {Tokens::%{_p}%}
+					send "{@p} &aYou successfully purchased &cProfit Per Minute &7(&cLevel X&7)" to {_p}
+					add 1 to {CellProfit.%{_p}%}
+					openCell({_p}, 1)
+				else:
+					send "{@p} &cYou do not have enough tokens for this!" to {_p}
+
+		if {CellProfit.%{_p}%} is 10:
+			format gui slot 11 of {_p} with shiny iron ingot named "&cProfit Per Minute &7(&cLevel X&7)" with lore "" and "&7Current Profit: $960/minute" and "" and "&aUpgrade: MAX LEVEL" and "" to run:
+				send "{@p} &cYou are already at the maximum level!" to {_p}
+
+
+		if {Excavator.%{_p}%} is not set:
+			format gui slot 15 of {_p} with iron pickaxe named "&cExcavator" with lore "" and "&7Chance of 10%% to get" and "&7a Tier 3 Crate Key" and "" and "&7Cost: 1000 Tokens" and "" to run:
+				close {_p}'s inventory
+				if {Tokens::%{_p}%} >= 1000:
+					remove 1000 from {Tokens::%{_p}%}
+					send "{@p} &aYou successfully purchased &cExcavator" to {_p}
+					set {Excavator.%{_p}%} to true
+					openCell({_p}, 1)
+				else:
+					send "{@p} &cYou do not have enough tokens for this!" to {_p}
+		if {Excavator.%{_p}%} is true:
+			format gui slot 15 of {_p} with shiny iron pickaxe named "&cExcavator" with lore "" and "&7Chance of 10%% to get" and "&7a Tier 3 Crate Key" and "" to do nothing
+
+
+
+command /cell:
+	trigger:
+		openCell(player, 0)
+
+
+on region enter:
+	if region is "cell1" parsed as region:
+		set {CollectEarnings.%player%} to true
+	if region is "cell2" parsed as region:
+		set {CollectEarnings.%player%} to true
+	if region is "cell3" parsed as region:
+		set {CollectEarnings.%player%} to true
+	if region is "cell4" parsed as region:
+		set {CollectEarnings.%player%} to true
+	if region is "cell5" parsed as region:
+		set {CollectEarnings.%player%} to true
+	if region is "cell6" parsed as region:
+		set {CollectEarnings.%player%} to true
+	if region is "cell7" parsed as region:
+		set {CollectEarnings.%player%} to true
+	if region is "cell8" parsed as region:
+		set {CollectEarnings.%player%} to true
+on region exit:
+	if region is "cell1" parsed as region:
+		delete {CollectEarnings.%player%}
+	if region is "cell2" parsed as region:
+		delete {CollectEarnings.%player%}
+	if region is "cell3" parsed as region:
+		delete {CollectEarnings.%player%}
+	if region is "cell4" parsed as region:
+		delete {CollectEarnings.%player%}
+	if region is "cell5" parsed as region:
+		delete {CollectEarnings.%player%}
+	if region is "cell6" parsed as region:
+		delete {CollectEarnings.%player%}
+	if region is "cell7" parsed as region:
+		delete {CollectEarnings.%player%}
+	if region is "cell8" parsed as region:
+		delete {CollectEarnings.%player%}
+
+
+every minute in world "ul_S31":
+	loop all players:
+		if {CollectEarnings.%loop-player%} is true:
+			if {CellProfit.%loop-player%} is 1:
+				add 150 to {Earnings::%loop-player%}
+				send "{@p} &aYou have received your cell earnings!" to loop-player
+			if {CellProfit.%loop-player%} is 2:
+				add 240 to {Earnings::%loop-player%}
+				send "{@p} &aYou have received your cell earnings!" to loop-player
+			if {CellProfit.%loop-player%} is 3:
+				add 330 to {Earnings::%loop-player%}
+				send "{@p} &aYou have received your cell earnings!" to loop-player
+			if {CellProfit.%loop-player%} is 4:
+				add 420 to {Earnings::%loop-player%}
+				send "{@p} &aYou have received your cell earnings!" to loop-player
+			if {CellProfit.%loop-player%} is 5:
+				add 510 to {Earnings::%loop-player%}
+				send "{@p} &aYou have received your cell earnings!" to loop-player
+			if {CellProfit.%loop-player%} is 6:
+				add 600 to {Earnings::%loop-player%}
+				send "{@p} &aYou have received your cell earnings!" to loop-player
+			if {CellProfit.%loop-player%} is 7:
+				add 690 to {Earnings::%loop-player%}
+				send "{@p} &aYou have received your cell earnings!" to loop-player
+			if {CellProfit.%loop-player%} is 8:
+				add 780 to {Earnings::%loop-player%}
+				send "{@p} &aYou have received your cell earnings!" to loop-player
+			if {CellProfit.%loop-player%} is 9:
+				add 870 to {Earnings::%loop-player%}
+				send "{@p} &aYou have received your cell earnings!" to loop-player
+			if {CellProfit.%loop-player%} is 10:
+				add 960 to {Earnings::%loop-player%}
+				send "{@p} &aYou have received your cell earnings!" to loop-player
+
+
+command /resetcells <player>:
+	permission: cells.reset
+	usage: Usage: /resetcells <player>
+	trigger:
+		set {CellProfit.%arg-1%} to 1
+		delete {Earnings::%arg-1%}
+		delete {Excavator.%arg-1%}
+		set {levelcell::%arg-1%} to 1
+		message "{@p} &aSuccessfully reset cells for &a%arg-1%"
+
+on load:
+	broadcast "&7[&cCells.sk&7] &aReloaded"

@@ -1,0 +1,134 @@
+#
+#		Donor Perks | Vinixs
+#
+
+command /flappingwings:
+	permission: rank.vip
+	permission message: &cYou need &a&lVIP
+	trigger:
+		drawWings style 17, particle1 "flame", speed 0, XYZ 0, 0, 0, particle2 "redstone", particle3 "redstone", center player, id "%player%", rainbowMode true, flapSpeed 2, flapRange 30, angle 120, height 0, space 0.2, visibleRange 30, tps 0, second 3
+		send "&aSuccess:"
+		send "&7Enabled Flapping Wings!"
+
+command /clearpart [<player>]:
+	permission: rank.vip
+	permission message: &cYou need &a&lVIP
+	trigger:
+		if arg 1 is not set:
+			stopEffect "%player%"
+			send "&aCleared your particles"
+		else:
+			stopEffect "%arg-1%"
+			send "&aCleared %arg-1%'s particles"
+			send "&aYour Particles have been cleared by &c%player%" to arg 1
+
+on death:
+    stopEffect "%player%"
+    send "&cParticles cleared due to you dying"
+
+on quit:
+    stopEffect "%player%"
+
+command /circle:
+	permission: rank.vip
+	permission message: &cYou need &a&lVIP
+	trigger:
+		drawComplexCircle particle "redstone", center player, id "%player%", rainbowMode true, randomRotation true, radius 1.5, density 20, start 0, visibleRange 30
+		send "&aSuccess:"
+		send "&7Enabled Circle Particle"
+
+command /nyan:
+	permission: rank.mvp
+	permission message: &cYou need &b&lMVP
+	trigger:
+		drawNyanCat center player, id "%player%", visibleRange 30
+		send "&aSuccess:"
+		send "&7Enabled Nyan Particle"
+
+command /multiples:
+	permission: rank.mvp
+	permission message: &cYou need &b&lMVP
+	trigger:
+		drawText "Multiples", particle redstone, RGB 0, 1, 200, center player, id "%player%", rainbowMode true, autoFace false, invert false, fontName "Arial", fontStyle plain, fontSize 10, scale 7, visibleRange 32, RotationXYZ 0, 0, 0, displacementXYZ 0, 3, 0, pulseDelay 0
+		send "&aSuccess:"
+		send "&7Enabled Multiples Particle"
+
+command /text [<text>]:
+	permission: rank.mvp+
+	permission message: &cYou need &6&lMVP+
+	trigger:
+		if arg 1 is set:
+			if length of arg-1 <= 16:
+				drawText arg-1, particle redstone, RGB 0, 1, 200, center player, id "%player%", rainbowMode true, autoFace false, invert false, fontName "Arial", fontStyle plain, fontSize 10, scale 7, visibleRange 32, RotationXYZ 0, 0, 0, displacementXYZ 0, 3, 0, pulseDelay 0
+			else:
+				send "&cError:"
+				send "&7That text is too long!"
+		else:
+			send "&cError:"
+			send "&7Usage: /text <text>"
+
+command /disco:
+	permission: rank.vip
+	permission message: &cYou need &a&lVIP
+	trigger:
+		drawDisco style 1, particle redstone, RGB 255, 0, 0, particle2 redstone, RGB2 0, 244, 0, center location of player, id "%player%", rainbowMode false, maxLines 7, lineLength 5, sphereRadius 1, sphereDensity 50, lineDensity 40, visibleRange 32, displacementXYZ 0, 5, 0, pulseDelay 2
+		send "&aSuccess"
+		send "&7Enabled Cylinder Particle."
+
+command /halo:
+	permission: rank.mvp
+	permission message: No Permission
+	trigger:
+		drawHalo particle "redstone", RGB 0, 0, 0, center player, id "%player%", rainbowMode true, solid true, density 10, visibleRange 32
+		send "&aSuccess"
+		send "&7Enable Halo Particle."
+
+command /particles:
+	trigger:
+		open chest with 6 rows named "&c&lDonor Shop" to player
+		if player has permission "rank.vip":
+			format slot 11 of player with blaze powder named "&bFlapping Wings" with lore "&7&l&m-----------------||&aClick to enable.||&7&l&m-----------------" to run [execute player command "/flappingwings"]
+			format slot 13 of player with diamond named "&dNyan Particle" with lore "&7&l&m-----------------||&aClick to enable.||&7&l&m-----------------" to run [execute player command "/nyan"]
+			format slot 15 of player with glowstone dust named "&cMultiples Text" with lore "&7&l&m-----------------||&aClick to enable.||&7||&a&oEdit this with /text <text>||&7&l&m-----------------" to run [execute player command "/multiples"]
+			format slot 19 of player with redstone named "&f&lHalo" with lore "&7&l&m-----------------||&aClick to enable.||&7&l&m-----------------" to run [execute player command "/halo"]
+			format slot 45 of player with barrier named "&c&lClear Particles" with lore "&7||&7||&7" to run [execute player command "/clearpart"]
+		else:
+			format slot 11 of player with blaze powder named "&bFlapping Wings" with lore "&7&l&m-----------------||&cRequires &b&lMVP.||&7&l&m-----------------" to run [execute player command "/buyfwings"]
+			format slot 13 of player with cake named "&dNyan Particle" with lore "&7&l&m-----------------||&cRequires &b&lMVP||&7&l&m-----------------" to run [execute player command "/nyan"]
+
+
+command /system:gessence [<player>]:
+    permission: rank.admin
+    permission message: No Permission
+    trigger:
+        give arg 1 bone meal named "&aGrowing Essence &7&o(Right-Click)" with lore "||&7Rank: &a"
+
+on right click:
+	if player has permission "rank.vip":
+		if player's tool is bone meal named "&aGrowing Essence &7&o(Right-Click)":
+			if {gcool.%player%} is not set:
+				loop all blocks in radius 3 around player's location:
+					if loop-block is cactus:
+						if block above loop-block is air:
+							set block above loop-block to cactus
+					if loop-block is sugar cane:
+						if block above loop-block is air:
+							set block above loop-block to sugar cane
+				set {gcool.%player%} to true
+				set {gused.%player%} to now
+			else:
+				set {_t} to "2 seconds" parsed as a timespan
+				set {_t2} to difference between {gused.%player%} and now
+				if {_t2} is less than {_t}:
+					set {_t3} to difference between {_t} and {_t2}
+					send "&7Your &aGrowing Essence &7is on cooldown...%nl%&7%{_t3}% left."
+				else:
+					loop all blocks in radius 3 around player's location:
+						if loop-block is cactus:
+							if block above loop-block is air:
+								set block above loop-block to cactus
+						if loop-block is sugar cane:
+							if block above loop-block is air:
+								set block above loop-block to sugar cane
+					set {gcool.%player%} to true
+					set {gused.%player%} to now

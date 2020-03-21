@@ -1,0 +1,401 @@
+#
+#
+#   Quests | Multiples
+#
+#
+
+options:
+	p: &7(&c!&7)
+
+
+on join:
+	checkQuests(player)
+
+function openQuests(p: player, i: integer):
+	checkQuests({_p})
+	if {_i} is 0:
+		open chest with 3 rows named "&8» &bQuests" to {_p}
+		set {_slot} to -1
+		loop 11 times:
+			add 1 to {_slot}
+			format gui slot {_slot} of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 12 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 13 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 14 of {_p} with gray glass pane named "&7" to do nothing
+		set {_slot} to 15
+		loop 11 times:
+			add 1 to {_slot}
+			format gui slot {_slot} of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 11 of {_p} with diamond pickaxe named "&cMining Quests" with lore "" and "&7Click to view mining quests" and "" to run:
+			openQuests({_p}, 1)
+		format gui slot 15 of {_p} with diamond sword named "&cWarzone Quests" with lore "" and "&7Click to view warzone quests" and "" to run:
+			openQuests({_p}, 3)
+
+		
+
+
+	if {_i} is 1:
+		open chest with 3 rows named "&8» &bMining Quests &r(Page 1/2)" to {_p}
+		set {_slot} to -1
+		loop 11 times:
+			add 1 to {_slot}
+			format gui slot {_slot} of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 12 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 14 of {_p} with gray glass pane named "&7" to do nothing
+		set {_slot} to 15
+		loop 3 times:
+			add 1 to {_slot}
+			format gui slot {_slot} of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 19 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 20 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 21 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 22 of {_p} with shiny book named "&cBack" to run:
+			openQuests({_p}, 0)
+		format gui slot 23 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 24 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 25 of {_p} with arrow named "&bNext Page" with lore "" and "&7Click to go to page 2" and "" to run:
+			openQuests({_p}, 2)
+		format gui slot 26 of {_p} with gray glass pane named "&7" to do nothing
+
+		if {Quests.1::%{_p}%} is false:
+			format gui slot 11 of {_p} with stone named "&bMine 100 Stone" with lore "" and "&7Reward: &a50 Tokens" and "" to do nothing
+		if {Quests.1::%{_p}%} is true:
+			format gui slot 11 of {_p} with shiny stone named "&bMine 100 Stone" with lore "" and "&aCOMPLETED" and "" to do nothing
+		if {Quests.2::%{_p}%} is false:
+			format gui slot 13 of {_p} with stone named "&bMine 350 Stone" with lore "" and "&7Reward: &a75 Tokens" and "" to do nothing
+		if {Quests.2::%{_p}%} is true:
+			format gui slot 13 of {_p} with shiny stone named "&bMine 350 Stone" with lore "" and "&aCOMPLETED" and "" to do nothing
+		if {Quests.3::%{_p}%} is false:
+			format gui slot 15 of {_p} with coal ore named "&bMine 150 Coal Ore" with lore "" and "&7Reward: &a100 Tokens" and "" to do nothing
+		if {Quests.3::%{_p}%} is true:
+			format gui slot 15 of {_p} with shiny coal ore named "&bMine 150 Coal Ore" with lore "" and "&aCOMPLETED" and "" to do nothing
+
+
+
+	if {_i} is 2:
+		open chest with 3 rows named "&8» &bMining Quests &r(Page 2/2)" to {_p}
+		set {_slot} to -1
+		loop 11 times:
+			add 1 to {_slot}
+			format gui slot {_slot} of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 12 of {_p} with gray glass pane named "&7" to do nothing
+
+		format gui slot 14 of {_p} with gray glass pane named "&7" to do nothing
+		set {_slot} to 15
+		loop 3 times:
+			add 1 to {_slot}
+			format gui slot {_slot} of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 19 of {_p} with arrow named "&bLast Page" with lore "" and "&7Click to go to page 1" and "" to run:
+			openQuests({_p}, 1)
+		format gui slot 20 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 21 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 22 of {_p} with shiny book named "&cBack" to run:
+			openQuests({_p}, 0)
+		format gui slot 23 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 24 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 25 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 26 of {_p} with gray glass pane named "&7" to do nothing
+
+		if {Quests.4::%{_p}%} is not set:
+			format gui slot 11 of {_p} with barrier named "&cQUEST LOCKED" with lore "" and "&7Complete previous quests" and "&7to unlock" and "" to do nothing
+		if {Quests.4::%{_p}%} is false:
+			format gui slot 11 of {_p} with coal ore named "&bMine 250 Coal Ore" with lore "" and "&7Reward: &a125 Tokens" and "" to do nothing
+		if {Quests.4::%{_p}%} is true:
+			format gui slot 11 of {_p} with shiny coal ore named "&bMine 250 Coal Ore" with lore "" and "&aCOMPLETED" and "" to do nothing
+		if {Quests.5::%{_p}%} is not set:
+			format gui slot 13 of {_p} with barrier named "&cQUEST LOCKED" with lore "" and "&7Complete previous quests" and "&7to unlock" and "" to do nothing
+		if {Quests.5::%{_p}%} is false:
+			format gui slot 13 of {_p} with iron ore named "&bMine 250 Iron Ore" with lore "" and "&7Reward: &a150 Tokens" and "" to do nothing
+		if {Quests.5::%{_p}%} is true:
+			format gui slot 13 of {_p} with shiny iron ore named "&bMine 250 Iron Ore" with lore "" and "&aCOMPLETED" and "" to do nothing
+		if {Quests.6::%{_p}%} is not set:
+			format gui slot 15 of {_p} with barrier named "&cQUEST LOCKED" with lore "" and "&7Complete previous quests" and "&7to unlock" and "" to do nothing
+		if {Quests.6::%{_p}%} is false:
+			format gui slot 15 of {_p} with gold ore named "&bMine 300 Gold Ore" with lore "" and "&7Reward: &a215 Tokens" and "" to do nothing
+		if {Quests.6::%{_p}%} is true:
+			format gui slot 15 of {_p} with shiny gold ore named "&bMine 150 Gold Ore" with lore "" and "&aCOMPLETED" and "" to do nothing
+
+
+
+
+	if {_i} is 3:
+		open chest with 3 rows named "&8» &bWarzone Quests &r(Page 1/2)" to {_p}
+		set {_slot} to -1
+		loop 11 times:
+			add 1 to {_slot}
+			format gui slot {_slot} of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 12 of {_p} with gray glass pane named "&7" to do nothing
+
+		format gui slot 14 of {_p} with gray glass pane named "&7" to do nothing
+		set {_slot} to 15
+		loop 3 times:
+			add 1 to {_slot}
+			format gui slot {_slot} of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 19 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 20 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 21 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 22 of {_p} with shiny book named "&cBack" to run:
+			openQuests({_p}, 0)
+		format gui slot 23 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 24 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 25 of {_p} with arrow named "&bNext Page" with lore "" and "&7Click to go to page 2" and "" to run:
+			openQuests({_p}, 4)
+		format gui slot 26 of {_p} with gray glass pane named "&7" to do nothing
+
+		if {Quests.7::%{_p}%} is not set:
+			format gui slot 11 of {_p} with barrier named "&cQUEST LOCKED" with lore "" and "&7Complete previous quests" and "&7to unlock" and "" to do nothing
+		if {Quests.7::%{_p}%} is false:
+			format gui slot 11 of {_p} with stone sword named "&bKill 25 Players" with lore "" and "&7Reward: &a175 Tokens" and "" to do nothing
+		if {Quests.7::%{_p}%} is true:
+			format gui slot 11 of {_p} with shiny stone sword named "&bKill 25 Players" with lore "" and "&aCOMPLETED" and "" to do nothing
+		if {Quests.8::%{_p}%} is not set:
+			format gui slot 13 of {_p} with barrier named "&cQUEST LOCKED" with lore "" and "&7Complete previous quests" and "&7to unlock" and "" to do nothing
+		if {Quests.8::%{_p}%} is false:
+			format gui slot 13 of {_p} with iron chestplate named "&bCapture 10 KOTH Outposts" with lore "" and "&7Reward: &a225 Tokens" and "" to do nothing
+		if {Quests.8::%{_p}%} is true:
+			format gui slot 13 of {_p} with shiny iron chestplate named "&bCapture 10 KOTH Outposts" with lore "" and "&aCOMPLETED" and "" to do nothing
+		if {Quests.9::%{_p}%} is not set:
+			format gui slot 15 of {_p} with barrier named "&cQUEST LOCKED" with lore "" and "&7Complete previous quests" and "&7to unlock" and "" to do nothing
+		if {Quests.9::%{_p}%} is false:
+			format gui slot 15 of {_p} with iron sword named "&bKill 100 Players" with lore "" and "&7Reward: &a300 Tokens" and "" to do nothing
+		if {Quests.9::%{_p}%} is true:
+			format gui slot 15 of {_p} with shiny iron sword named "&bKill 100 Players" with lore "" and "&aCOMPLETED" and "" to do nothing
+
+
+
+	if {_i} is 4:
+		open chest with 3 rows named "&8» &bWarzone Quests &r(Page 2/2)" to {_p}
+		set {_slot} to -1
+		loop 11 times:
+			add 1 to {_slot}
+			format gui slot {_slot} of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 12 of {_p} with gray glass pane named "&7" to do nothing
+
+		format gui slot 14 of {_p} with gray glass pane named "&7" to do nothing
+		set {_slot} to 15
+		loop 3 times:
+			add 1 to {_slot}
+			format gui slot {_slot} of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 19 of {_p} with arrow named "&bLast Page" with lore "" and "&7Click to go to page 1" and "" to run:
+			openQuests({_p}, 3)
+		format gui slot 20 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 21 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 22 of {_p} with shiny book named "&cBack" to run:
+			openQuests({_p}, 0)
+		format gui slot 23 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 24 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 25 of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 26 of {_p} with gray glass pane named "&7" to do nothing
+
+		if {Quests.10::%{_p}%} is not set:
+			format gui slot 11 of {_p} with barrier named "&cQUEST LOCKED" with lore "" and "&7Complete previous quests" and "&7to unlock" and "" to do nothing
+		if {Quests.10::%{_p}%} is false:
+			format gui slot 11 of {_p} with gold sword named "&bKill 150 Players" with lore "" and "&7Reward: &a325 Tokens" and "" to do nothing
+		if {Quests.10::%{_p}%} is true:
+			format gui slot 11 of {_p} with shiny gold sword named "&bKill 150 Players" with lore "" and "&aCOMPLETED" and "" to do nothing
+		if {Quests.11::%{_p}%} is not set:
+			format gui slot 13 of {_p} with barrier named "&cQUEST LOCKED" with lore "" and "&7Complete previous quests" and "&7to unlock" and "" to do nothing
+		if {Quests.11::%{_p}%} is false:
+			format gui slot 13 of {_p} with gold chestplate named "&bCapture 20 KOTH Outposts" with lore "" and "&7Reward: &a375 Tokens" and "" to do nothing
+		if {Quests.11::%{_p}%} is true:
+			format gui slot 13 of {_p} with shiny gold chestplate named "&bCapture 20 KOTH Outposts" with lore "" and "&aCOMPLETED" and "" to do nothing
+		if {Quests.12::%{_p}%} is not set:
+			format gui slot 15 of {_p} with barrier named "&cQUEST LOCKED" with lore "" and "&7Complete previous quests" and "&7to unlock" and "" to do nothing
+		if {Quests.12::%{_p}%} is false:
+			format gui slot 15 of {_p} with diamond sword named "&bKill 100 Players" with lore "" and "&7Reward: &a400 Tokens" and "" to do nothing
+		if {Quests.12::%{_p}%} is true:
+			format gui slot 15 of {_p} with shiny diamond sword named "&bKill 300 Players" with lore "" and "&aCOMPLETED" and "" to do nothing
+
+
+
+function checkQuests(p: player):
+	if {Quests.1::%{_p}%} is not set:
+		set {Quests.1::%{_p}%} to false
+	if {Quests.2::%{_p}%} is not set:
+		set {Quests.2::%{_p}%} to false
+	if {Quests.3::%{_p}%} is not set:
+		set {Quests.3::%{_p}%} to false
+	if {Quests.1::%{_p}%} is true:
+		if {Quests.2::%{_p}%} is true:
+			if {Quests.3::%{_p}%} is true:
+				if {QuestSet.1::%{_p}%} is not set:
+					set {Quests.4::%{_p}%} to false
+					set {Quests.5::%{_p}%} to false
+					set {Quests.6::%{_p}%} to false
+					set {QuestSet.1::%{_p}%} to true
+					add 100000 to {_p}'s balance
+					send "{@p} &aYou have received $100,000 for completing a set of &bMining Quests&a!" to {_p}
+	if {Quests.4::%{_p}%} is true:
+		if {Quests.5::%{_p}%} is true:
+			if {Quests.6::%{_p}%} is true:
+				if {QuestSet.2::%{_p}%} is not set:
+					set {Quests.7::%{_p}%} to false
+					set {Quests.8::%{_p}%} to false
+					set {Quests.9::%{_p}%} to false
+					set {QuestSet.2::%{_p}%} to true
+					add 250000 to {_p}'s balance
+					send "{@p} &aYou have received $250,000 for completing a set of &bMining Quests&a!" to {_p}
+	if {Quests.7::%{_p}%} is true:
+		if {Quests.8::%{_p}%} is true:
+			if {Quests.9::%{_p}%} is true:
+				if {QuestSet.3::%{_p}%} is not set:
+					set {Quests.10::%{_p}%} to false
+					set {Quests.11::%{_p}%} to false
+					set {Quests.12::%{_p}%} to false
+					set {QuestSet.3::%{_p}%} to true
+					add 525000 to {_p}'s balance
+					send "{@p} &aYou have received $525,000 for completing a set of &bWarzone Quests&a!" to {_p}
+	if {Quests.10::%{_p}%} is true:
+		if {Quests.11::%{_p}%} is true:
+			if {Quests.12::%{_p}%} is true:
+				if {QuestSet.4::%{_p}%} is not set:
+					set {QuestSet.4::%{_p}%} to true
+					add 1000000 to {_p}'s balance
+					send "{@p} &aYou have received $1,000,000 for completing a set of &bWarzone Quests&a!" to {_p}
+
+
+
+
+command /quests:
+	trigger:
+		openQuests(player, 0)
+
+
+
+
+command /resetquests <offlineplayer>:
+	permission: quests.admin
+	trigger:
+		set {Quests.1::%arg-1%} to false
+		set {Quests.2::%arg-1%} to false
+		set {Quests.3::%arg-1%} to false
+		delete {Quests.4::%arg-1%}
+		delete {Quests.5::%arg-1%}
+		delete {Quests.6::%arg-1%}
+		delete {Quests.7::%arg-1%}
+		delete {Quests.8::%arg-1%}
+		delete {Quests.9::%arg-1%}
+		delete {Quests.10::%arg-1%}
+		delete {Quests.11::%arg-1%}
+		delete {Quests.12::%arg-1%}
+		delete {QuestSet.1::%arg-1%}
+		delete {QuestSet.2::%arg-1%}
+		delete {QuestSet.3::%arg-1%}
+		delete {Quests.stone::%arg-1%}
+		delete {Quests.kill::%arg-1%}
+		message "{@p} &aReset &a%arg-1%&a's quests!"
+
+command /setquest <offlineplayer> <integer> <text>:
+	permission: quests.admin
+	trigger:
+		if arg-3 is not "true", "false" or "reset":
+			message "{@p} &c'&c%arg-3%&c' is invalid. Usage: <true|false|reset>"
+		else:
+			if arg-3 is "true":
+				if arg-2 is more than 12:
+					message "{@p} &cThere are only 12 quests!"
+				else:
+					if arg-2 is less than 1:
+						message "{@p} &cThe quest must be a positive integer!"
+					else:
+						set {Quests.%arg-2%::%arg-1%} to true
+						message "{@p} &aSet quest &a%arg-2% &afor player &a%arg-1% &ato true!"
+			if arg-3 is "false":
+				if arg-2 is more than 12:
+					message "{@p} &cThere are only 12 quests!"
+				else:
+					if arg-2 is less than 1:
+						message "{@p} &cThe quest must be a positive integer!"
+					else:
+						set {Quests.%arg-2%::%arg-1%} to false
+						message "{@p} &aSet quest &a%arg-2% &afor player &a%arg-1% &ato false!"
+			if arg-3 is "reset":
+				if arg-2 is more than 12:
+					message "{@p} &cThere are only 12 quests!"
+				else:
+					if arg-2 is less than 1:
+						message "{@p} &cThe quest must be a positive integer!"
+					else:
+						if arg-2 is 1:
+							set {Quests.%arg-2%::%arg-1%} to false
+							message "{@p} &aReset quest &a%arg-2% &afor player &a%arg-1%!"
+						else:
+							if arg-2 is 2:
+								set {Quests.%arg-2%::%arg-1%} to false
+								message "{@p} &aReset quest &a%arg-2% &afor player &a%arg-1%!"
+							else:
+								if arg-2 is 3:
+									set {Quests.%arg-2%::%arg-1%} to false
+									message "{@p} &aReset quest &a%arg-2% &afor player &a%arg-1%!"
+								else:
+									delete {Quests.%arg-2%::%arg-1%}
+									message "{@p} &aReset quest &a%arg-2% &afor player &a%arg-1%!"			
+
+
+
+
+
+
+#EVENTS
+
+
+
+on death:
+	add 1 to {Quests.kill::%attacker%}
+	if {Quests.7::%attacker%} is false:
+		if {Quests.gold::%attacker%} is 25:
+			set {Quests.7::%attacker%} to true
+			message "{@p} &aYou have completed a quest! Do &b/quests &ato view quests!"
+			delete {Quests.kill::%attacker%}
+			checkQuests(attacker)
+			add 175 to {Tokens::%attacker%}
+
+
+	if {Quests.9::%attacker%} is false:
+		if {Quests.gold::%attacker%} is 100:
+			set {Quests.9::%attacker%} to true
+			message "{@p} &aYou have completed a quest! Do &b/quests &ato view quests!"
+			delete {Quests.kill::%attacker%}
+			checkQuests(attacker)
+			add 300 to {Tokens::%attacker%}
+
+	if {Quests.10::%attacker%} is false:
+		if {Quests.gold::%attacker%} is 150:
+			set {Quests.10::%attacker%} to true
+			message "{@p} &aYou have completed a quest! Do &b/quests &ato view quests!"
+			delete {Quests.kill::%attacker%}
+			checkQuests(attacker)
+			add 325 to {Tokens::%attacker%}
+
+	if {Quests.12::%attacker%} is false:
+		if {Quests.gold::%attacker%} is 300:
+			set {Quests.12::%attacker%} to true
+			message "{@p} &aYou have completed a quest! Do &b/quests &ato view quests!"
+			delete {Quests.kill::%attacker%}
+			checkQuests(attacker)
+			add 400 to {Tokens::%attacker%}
+
+
+
+function checkKoths(player):
+	if {Quests.8::%{_p}%} is false:
+		if {Quests.koth::%{_p}%} is 10:
+			set {Quests.8::%{_p}%} to true
+			message "{@p} &aYou have completed a quest! Do &b/quests &ato view quests!"
+			delete {Quests.kill::%{_p}%}
+			checkQuests({_p})
+			add 225 to {Tokens::%{_p}%}
+	if {Quests.11::%{_p}%} is false:
+		if {Quests.koth::%{_p}%} is 20:
+			set {Quests.11::%{_p}%} to true
+			message "{@p} &aYou have completed a quest! Do &b/quests &ato view quests!"
+			delete {Quests.kill::%{_p}%}
+			checkQuests({_p})
+			add 375 to {Tokens::%{_p}%}
+
+
+
+
+
+on load:
+	broadcast "&7[&cQuests.sk&7] &aReloaded"

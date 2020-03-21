@@ -1,0 +1,80 @@
+command /discord:
+    trigger:
+        send ""
+        send "<link:https://discord.gg/DqU6eeK> &c&lMultiples &8» &7&nClick to join the discord!"
+        send ""
+ 
+ 
+command /minecraft:me:
+    trigger:
+        send "&cNo Permission"
+        stop
+ 
+ 
+command /me:
+    trigger:
+        send "&cNo Permission"
+        stop
+ 
+ 
+command /sc [<text>]:
+	permission: rank.jrmod
+	permission message: &7You may not use this command.
+	trigger:
+		if arg-1 is not set:
+			send "&7Please set a message to send to the staff chat."
+		else if arg-1 is "on":
+			send "&aEnabled &7staff chat"
+			set {staffchat.%player's uuid%} to true
+		else if arg-1 is "off":
+			send "&cDisabled &7staff chat"
+			set {staffchat.%player's uuid%} to false
+		else if arg-1 is "toggle":
+			send "&7Set staff chat to &c%not {staffchat.%player's uuid%}%"
+			set {staffchat.%player's uuid%} to not {staffchat.%player's uuid%}
+		else:
+			set {_staffmsg} to formatted arg-1
+			send "&c&l[S] &8&l- &7%executor%&f: &e%{_staffmsg}%" to all players where [input has permission "rank.jrmod"]
+
+# command /report [<offline player>] [<text>]:
+# 	trigger:
+# 		if arg-1 is not set:
+# 			send "&c/report <player> <reason>" to player
+# 		else if arg-2 is not set:
+# 			send "&cPlease select a reason!" to player
+# 		else:
+# 			send ""
+# 			send "&3&l[REPORT] &7» Thank you for your report! Staff members have been notified!"
+# 			send ""
+			
+# 			send "" to all players where [input has permission "rank.jrmod"]
+# 			send "&e&l[REPORT] &7» &c%arg-1%&7 was reported by &c%player%&7 for &c%arg-2%" to all players where [input has permission "rank.jrmod"]
+# 			send "" to all players where [input has permission "rank.jrmod"]
+
+command /list:
+    trigger:
+        loop all players:
+            add loop-player to {_online::*}
+        message "&c&lMultiples &8» &6%size of {_online::*}%&6/&6%max players%"
+        set {_num} to 0
+        loop {_online::*}:
+            add 1 to {_num}
+            message "&6%{_num}%&6. &c%{rank.%UUID of loop-value%}% &7%loop-value%"
+
+on walk on honey block:
+    push player up at speed 14
+    push player forward at speed 20
+
+
+on chat:
+	if player is "Vinixs":
+		if message contains "sick":
+			add 1 to {sick::Vinixs}
+	if {staffchat.%uuid of player%} is true:
+		cancel event
+		set {_staffmsg} to formatted message
+		send "&c&l[S] &8&l- &7%player%&f: &e%{_staffmsg}%" to all players where [input has permission "rank.jrmod"]
+
+command /sick:
+	trigger:
+		message "&6Vinixs &7has said &csick &6%{sick::Vinixs}% &7times!"

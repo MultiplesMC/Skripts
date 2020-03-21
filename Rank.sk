@@ -1,0 +1,189 @@
+
+on load:
+  set {hackwords::*} to "hacking", "hax", "hacks", and "hack"
+
+on chat:
+  cancel event
+  if {mute.%player%} is true:
+    stop
+  if {staffchat.%uuid of player%} is true:
+    stop
+  if {verified.%uuid of player%} is false:
+    kick player due to "&cYou were not verified when you tried to talk, join again"
+    stop
+  if {chat} is false:
+    if player does not have permission "rank.jrmod":
+      stop
+  if {muted::*} contains player:
+    stop
+  if {hackwords::*} contains message:
+    play sound "ENTITY_VILLAGER_NO" to player  
+    send "&cHey! Use /report or contact a staff memeber on discord!"
+    stop
+  if {rank.%UUID of player%} is "Admin":
+    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &c%player%&8: &f%message%"
+    stop
+  if {rank.%UUID of player%} is "Dev":
+    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &c%player%&8: &f%message%"
+    stop
+  if {rank.%UUID of player%} is "SrMod":
+    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &6%player%&8: &f%message%"
+    stop
+  if {rank.%UUID of player%} is "Mod":
+    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &5%player%&8: &f%message%"
+    stop
+  if {rank.%UUID of player%} is "VIP":
+    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &a%player%&8: &f%message%"
+    stop
+  if {rank.%UUID of player%} is "MVP":
+    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7]  %{display.rank.%UUID of player%}% &b%player%&8: &f%message%"
+    stop
+  if {rank.%UUID of player%} is "MVP+":
+    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &6%player%&8: &f%message%"
+    stop
+  if {rank.%UUID of player%} is "MH":
+    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &d%player%&8: &f%message%"
+    stop
+  else:
+    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] &7%player%&8: &f%message%"
+    stop
+
+command /setupall:
+  permission: op
+  permission message: &c(!) Permission Error!
+  trigger:
+    loop all players:
+      set {rank.%UUID of loop-player%} to "Default"
+      set {Level::%UUID of loop-player%} to 0
+      set {display.rank.%UUID of loop-player%} to ""
+
+command /system:rank [<Offline player=%player%>] [<text>]:
+  permission: rank.admin
+  permission message: &c(!) Permission Error
+  trigger:
+    if argument 1 is a player:
+      if argument 2 is "Admin" or "Dev" or "VIP" or "MVP" or "Mod" or "Member" or "Default" or "SrMod" or "MH" or "MVP+":
+        if argument 2 is "Admin":
+          set {rank.%UUID of argument 1%} to "Admin"
+          set {display.rank.%UUID of argument 1%} to "&c&lADMIN &8&l≫"
+          set {staff.%UUID of argument 1%} to true
+          send "&7Your rank was updated to &c&lAdmin" to argument 1
+          send "&7Succesfully changed &c%argument 1%&7's rank to &c&lAdmin"
+          execute console command "manuadd %argument 1% admin all"
+        if arg-2 is "Dev":
+          set {rank.%uuid of arg-1%} to "Dev"
+          set {display.rank.%uuid of arg-1%} to "&c&lDEV &8&l≫"
+          set {staff.%uuid of arg-1%} to true
+          send "&7Your rank was updated to &c&lDev"
+          send "&7Succesfully changed &c%argument 1%&7's rank to &c&lDeveloper"
+          execute console command "manuadd %arg-1% dev all"
+        if argument 2 is "SrMod":
+          set {rank.%UUID of argument 1%} to "SrMod"
+          set {display.rank.%UUID of argument 1%} to "&6&lSRMOD &8&l≫"
+          set {staff.%UUID of argument 1%} to true
+          send "&7Your rank was updated to &6&lSrMod" to argument 1
+          send "&7Succesfully changed &5%argument 1%&7's rank to &6&lSrMod"
+          execute console command "manuadd %argument 1% srmod all"
+        if argument 2 is "Mod":
+          set {rank.%UUID of argument 1%} to "Mod"
+          set {display.rank.%UUID of argument 1%} to "&5&lMOD &8&l≫"
+          set {staff.%UUID of argument 1%} to true
+          send "&7Your rank was updated to &5&lMod" to argument 1
+          send "&7Succesfully changed &5%argument 1%&7's rank to &5&lMod"
+          execute console command "manuadd %argument 1% Moderator all"
+        if argument 2 is "VIP":
+          set {rank.%UUID of argument 1%} to "VIP"
+          set {display.rank.%UUID of argument 1%} to "&a&lVIP &8&l≫"
+          set {staff.%UUID of argument 1%} to false
+          send "&7Your rank was updated to &a&lVIP" to argument 1
+          send "&7Succesfully changed &a%argument 1%&7's rank to &a&lVIP"
+          execute console command "manuadd %argument 1% VIP all"
+        if argument 2 is "MVP":
+          set {rank.%UUID of argument 1%} to "MVP"
+          set {display.rank.%UUID of argument 1%} to "&b&lMVP &8&l≫"
+          set {staff.%UUID of argument 1%} to false
+          send "&7Your rank was updated to &b&lMVP" to argument 1
+          send "&7Succesfully changed &b%argument 1%&7's rank to &b&lMVP"
+          execute console command "manuadd %argument 1% Mvp all"
+        if argument 2 is "MVP+":
+          set {rank.%UUID of argument 1%} to "MVP+"
+          set {display.rank.%UUID of argument 1%} to "&6&lMVP+ &8&l≫"
+          set {staff.%UUID of argument 1%} to false
+          send "&7Your rank was updated to &6&lMVP+" to argument 1
+          send "&7Succesfully changed &6%argument 1%&7's rank to &6&lMVP+"
+          execute console command "manuadd %argument 1% MVP+ all"
+        if argument 2 is "MH":
+          set {rank.%UUID of argument 1%} to "MH"
+          set {display.rank.%UUID of argument 1%} to "&d&lMH &8&l≫"
+          set {staff.%UUID of argument 1%} to false
+          send "&7Your rank was updated to &d&lMH" to argument 1
+          send "&7Succesfully changed &d%argument 1%&7's rank to &d&lMinehut"
+          execute console command "manuadd %argument 1% Mvp+ all"
+        if argument 2 is "Member" or "Default":
+          set {rank.%UUID of argument 1%} to "Default"
+          set {display.rank.%UUID of argument 1%} to ""
+          set {staff.%UUID of argument 1%} to false
+          send "&7Your rank was updated to &8&lDefault" to argument 1
+          send "&7Succesfully changed &8%argument 1%&7's rank to &8&lDefault"
+          execute console command "manuadd %argument 1% default all"
+
+      else:
+        send "&c/system:rank (player) (rank)"
+    else:
+      send "&c/system:rank (player) (rank)"
+
+command /ranks:
+  permission: op
+  permission message: &c(!) Permission Error
+  trigger:
+    send "&3Rank list:"
+    send "&7- &c&lADMIN &c%player%"
+    send "&7- &c&lDEV &9%player%"
+    send "&7- &5&lSRMOD &5%player%"
+    send "&7- &5&lMOD &5%player%"
+    send "&7- &6&lMVP+ &6%player%"
+    send "&7- &b&lMVP &b%player%"
+    send "&7- &a&lVIP &a%player%"
+    send "&7- &d&lMH &d%player%"
+    send "&7- &7%player%"
+
+
+command /stats [<player=%player%>]:
+  trigger:
+    send "&b&m-----------------"
+    send "&3Stats for %argument 1%"
+    send "&b&m-----------------"
+    send "&bRank: %{display.rank.%UUID of argument 1%}%"
+    send "&bLevel: &7[&c%{Level::%arg-1%}%&7]"
+    send "&b&m-----------------"
+
+on load:
+  broadcast "&cRank Plugin Updated"
+
+
+command /rank [<player=%player%>]:
+  trigger:
+    if argument 1 is a player:
+      open virtual chest inventory with 5 rows named "&7Rank selection (%argument 1%)" to player
+      format gui slot 4 of player with arg-1's skull named "&3&lModifying %arg-1%" lored "||&bIn this GUI you can modify||&3%arg-1%'s&b rank.||||&bCurrent Rank||&3    &3● &r%{rank.%arg-1's uuid%}%" to do nothing
+      format gui slot 19 of player with book and quill named "&3&lStaff Ranks" to do nothing
+
+      format gui slot 20 of player with book named "&c&lAdmin" lored "||&7Click to change &c%arg-1%&7's rank||&7to &cAdministrator&7.||&7" to run player command "/system:rank %arg-1% admin"
+
+      format gui slot 21 of player with book named "&c&lDev" lored "||&7Click to change &c%arg-1%&7's rank||&7to &cDeveloper&7.||&7" to run player command "/system:rank %arg-1% dev"
+
+      format gui slot 22 of player with book named "&5&lSenior Mod" lored "||&7Click to change &5%arg-1%&7's rank||&7to &5Senior Moderator&7.||&7" to run player command "/system:rank %arg-1% srmod"
+
+      format gui slot 23 of player with book named "&5&lMod" lored "||&7Click to change &5%arg-1%&7's rank||&7to &5Moderator&7.||&7" to run player command "/system:rank %arg-1% mod"
+
+      format gui slot 28 of player with book and quill named "&3Donor Ranks/Member" to do nothing
+
+      format gui slot 29 of player with book named "&6&lMVP+" lored "||&7Click to change &6%argument 1%'s rank ||&7 to &6MVP+&7.||&7" to run player command "/system:rank %arg-1% MVP+"
+
+      format gui slot 30 of player with book named "&b&lMVP" lored "||&7Click to change &b%argument 1%'s rank ||&7 to &bMVP&7.||&7" to run player command "/system:rank %arg-1% MVP"
+
+      format gui slot 31 of player with book named "&a&lVIP" lored "||&7Click to change &a%argument 1%'s rank ||&7 to &aVIP&7.||&7" to run player command "/system:rank %arg-1% VIP"
+
+      format gui slot 32 of player with book named "&d&lMH" lored "||&7Click to change &d%argument 1%'s rank ||&7 to &dMH&7.||&7" to run player command "/system:rank %arg-1% MH"
+
+      format gui slot 33 of player with book named "&8&lDefault" lored "||&7Click to change &8%argument 1%'s rank ||&7 to &8Member&7.||&7" to run player command "/system:rank %arg-1% member"

@@ -1,0 +1,86 @@
+options:
+	
+	Admin1: Vinixs
+	Admin2: Spiderlogical
+	Admin3: BreakfastDeliqht
+	Dev1: izzzzthewiz
+	Dev2: Skizzme
+	Cont1: Awokens
+	Mod1: NotSimping
+	Mod2: aient
+	Mod3: Kailum
+	Mod4: MegaWolfer
+
+
+command /staff:
+	trigger:
+		staffList(player, 0)
+
+function isOnline(p: offline player) :: text:
+    if {_p} is online:
+        return "&a&lONLINE"
+    else:
+        return "&c&lOFFLINE"
+
+function staffList(p: player, i: integer):
+	if {_i} is 0:
+		open chest with 3 rows named "Staff" to {_p}
+		set {_Admin1} to skull of "{@Admin1}" parsed as offline player
+		set {_Dev1} to skull of "{@Dev1}" parsed as offline player
+		set {_Cont1} to skull of "{@Cont1}" parsed as offline player
+		set {_Mod1} to skull of "{@Mod1}" parsed as offline player
+		loop 27 times:
+			format gui slot (loop-value - 1) of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 10 of {_p} with {_Admin1} named "&cAdmins" with lore "" and "&7Click to open menu" and "" to run:
+			staffList(player, 1)
+		format gui slot 12 of {_p} with {_Dev1} named "&cDevelopers" with lore "" and "&7Click to open menu" and "" to run:
+			staffList(player, 2)
+		format gui slot 14 of {_p} with {_Cont1} named "&cContributors" with lore "" and "&7Click to open menu" and "" to run:
+			staffList(player, 3)
+		format gui slot 16 of {_p} with {_Mod1} named "&cModerators" with lore "" and "&7Click to open menu" and "" to run:
+			staffList(player, 4)
+	if {_i} is 1:
+		open chest with 3 rows named "Administrative Team" to {_p}
+		set {_Admin1} to skull of "{@Admin1}" parsed as offline player
+		set {_a1} to "{@Admin1}" parsed as offline player
+		set {_Admin2} to skull of "{@Admin2}" parsed as offline player
+		set {_a2} to "{@Admin2}" parsed as offline player
+		set {_Admin3} to skull of "{@Admin3}" parsed as offline player
+		set {_a3} to "{@Admin3}" parsed as offline player
+		loop 27 times:
+			format gui slot (loop-value - 1) of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 11 of {_p} with {_Admin1} named "&c{@Admin1}" with lore "" and "&7&oOwner" and "" and "&7Status: %isOnline({_a1})%" to do nothing
+		format gui slot 13 of {_p} with {_Admin2} named "&c{@Admin2}" with lore "" and "&7&oAdmin" and "" and "&7Status: %isOnline({_a2})%" to do nothing
+		format gui slot 15 of {_p} with {_Admin3} named "&c{@Admin3}" with lore "" and "&7&oAdmin" and "" and "&7Status: %isOnline({_a3})%" to do nothing
+	if {_i} is 2:
+		open chest with 3 rows named "Development Team" to {_p}
+		set {_Dev1} to skull of "{@Dev1}" parsed as offline player
+		set {_d1} to "{@Dev1}" parsed as offline player
+		set {_Dev2} to skull of "{@Dev2}" parsed as offline player
+		set {_d2} to "{@Dev2}" parsed as offline player
+		loop 27 times:
+			format gui slot (loop-value - 1) of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 11 of {_p} with {_Dev1} named "&d{@Dev1}" with lore "" and "&7&oDeveloper" and "" and "&7Status: %isOnline({_d1})%" to do nothing
+		format gui slot 15 of {_p} with {_Dev2} named "&d{@Dev2}" with lore "" and "&7&oDeveloper" and "" and "&7Status: %isOnline({_d2})%" to do nothing
+	if {_i} is 3:
+		open chest with 3 rows named "Contributers" to {_p}
+		set {_Cont1} to skull of "{@Cont1}" parsed as offline player
+		loop 27 times:
+			format gui slot (loop-value - 1) of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 13 of {_p} with {_Cont1} named "&e{@Cont1}" with lore "" and "&7&oAdvisor" and "" to do nothing
+	if {_i} is 4:
+		open chest with 3 rows named "Moderation Team" to {_p}
+		set {_Mod1} to skull of "{@Mod1}" parsed as offline player
+		set {_m1} to "{@Mod1}" parsed as offline player
+		set {_Mod2} to skull of "{@Mod2}" parsed as offline player
+		set {_m2} to "{@Mod2}" parsed as offline player
+		set {_Mod3} to skull of "{@Mod3}" parsed as offline player
+		set {_m3} to "{@Mod3}" parsed as offline player
+		set {_Mod4} to skull of "{@Mod4}" parsed as offline player
+		set {_m4} to "{@Mod4}" parsed as offline player
+		loop 27 times:
+			format gui slot (loop-value - 1) of {_p} with gray glass pane named "&7" to do nothing
+		format gui slot 10 of {_p} with {_Mod1} named "&e{@Mod1}" with lore "" and "&7&oSr. Moderator" and "" and "&7Status: %isOnline({_m1})%" to do nothing
+		format gui slot 12 of {_p} with {_Mod2} named "&e{@Mod2}" with lore "" and "&7&oModerator" and "" and "&7Status: %isOnline({_m2})%" to do nothing
+		format gui slot 14 of {_p} with {_Mod3} named "&e{@Mod3}" with lore "" and "&7&oModerator" and "" and "&7Status: %isOnline({_m3})%" to do nothing
+		format gui slot 16 of {_p} with {_Mod4} named "&e{@Mod4}" with lore "" and "&7&oModerator" and "" and "&7Status: %isOnline({_m4})%" to do nothing

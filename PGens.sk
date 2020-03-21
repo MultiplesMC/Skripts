@@ -1,0 +1,139 @@
+options:
+	prefix: &c&lCells &7•
+on place:
+	set {_w} to {clans::%player%}
+	if player's world is not "zcell_%{_w}%":
+		if player does not have permission "rank.srmod":
+			cancel event
+			message "{@prefix} &cYou can not place blocks in other clans' cells!"
+	else:
+		if block below event-block is not concrete powder:
+			if player does not have permission "rank.srmod":
+				cancel event
+				message "{@prefix} &cYou cannot place blocks here!"
+		else:
+			if event-block is coal ore:
+				message "&aYou placed a &8Coal &7Generator&a!"
+			else if event-block is iron ore:
+				message "&aYou placed an &fIron &7Generator&a!"
+			else if event-block is gold ore:
+				message "&aYou placed a &6Gold &7Generator&a!"
+			else if event-block is lapis ore:
+				message "&aYou placed a &9Lapis &7Generator&a!"
+			else if event-block is redstone ore:
+				message "&aYou placed a &4Redstone &7Generator&a!"
+			else if event-block is diamond ore:
+				message "&aYou placed a &bDiamond &7Generator&a!"
+			else:
+				if player does not have permission "rank.srmod":
+					cancel event
+
+on break:
+	set {_w} to {clans::%player%}
+	if player's world is not "zcell_%{_w}%":
+		if player does not have permission "rank.srmod":
+			cancel event
+			message "{@prefix} &cYou can not break blocks in other clans' cells!"
+	else:
+		if event-block is not coal ore, iron ore, redstone ore, lapis ore, gold ore or diamond ore:
+			if player does not have permission "rank.srmod":
+				cancel event
+		else:
+			set {_amt} to 1 + (1 * level of fortune of tool of player)
+			if event-block is coal ore:
+				if player is sneaking:
+					cancel drops
+					give player 1 of coal ore named "&8Coal &7Generator"
+					message "{@prefix} &aYou collected your &8Coal &7Generator&a!"
+				else:
+					cancel drops
+					give player {_amt} of coal
+					set event-block to light blue terracotta
+					wait 15 seconds
+					set event-block to coal ore
+			if event-block is iron ore:
+				if player is sneaking:
+					cancel drops
+					give player 1 of iron ore named "&fIron &7Generator"
+					message "{@prefix} &aYou collected your &fIron &7Generator&a!"
+				else:
+					cancel drops
+					give player {_amt} of iron ingot
+					set event-block to light blue terracotta
+					wait 20 seconds
+					set event-block to iron ore
+			if event-block is redstone ore:
+				if player is sneaking:
+					cancel drops
+					give player 1 of redstone ore named "&4Redstone &7Generator"
+					message "{@prefix} &aYou collected your &4Redstone &7Generator&a!"
+				else:
+					cancel drops
+					give player {_amt} of redstone dust
+					set event-block to light blue terracotta
+					wait 20 seconds
+					set event-block to redstone ore
+			if event-block is lapis ore:
+				if player is sneaking:
+					cancel drops
+					give player 1 of lapis ore named "&9Lapis &7Generator"
+					message "{@prefix} &aYou collected your &9Lapis &7Generator&a!"
+				else:
+					cancel drops
+					give player {_amt} of lapis
+					set event-block to light blue terracotta
+					wait 15 seconds
+					set event-block to lapis ore
+			if event-block is gold ore:
+				if player is sneaking:
+					cancel drops
+					give player 1 of gold ore named "&6Gold &7Generator"
+					message "{@prefix} &aYou collected your &6Gold &7Generator&a!"
+				else:
+					cancel drops
+					give player {_amt} of gold ingot
+					set event-block to light blue terracotta
+					wait 25 seconds
+					set event-block to gold ore
+			if event-block is diamond ore:
+				if player is sneaking:
+					cancel drops
+					give player 1 of diamond ore named "&bDiamond &7Generator"
+					message "{@prefix} &aYou collected your &bDiamond &7Generator&a!"
+				else:
+					cancel drops
+					give player {_amt} of diamond
+					set event-block to light blue terracotta
+					wait 15 seconds
+					set event-block to diamond ore
+
+on quit:
+	if {clans::%player%} is set:
+		set {_clan} to {clans::%player%}
+		set {_owner} to {clans::%{_clan}%::owner}
+		loop {members::%{_owner}%::*}:
+			if loop-value is online:
+				add 1 to {_on}
+		if {_on} is less than 1:
+			wait 1 minute
+			loop {members::%{_owner}%::*}:
+				if loop-value is online:
+					add 1 to {_on}
+					if {_on} is less than 1:
+						execute console command "mv unload zcell_%{_clan}%"
+
+on load:
+	execute console command "mv load ul_S31"
+	execute console command "mv load cell_template_S3"
+
+command /spawn [<player>]:
+	usage: Usage: /spawn (player)
+	trigger:
+		if arg-1 is not set:
+			execute console command "mv tp %player% ul_S31"
+		else:
+			if player does not have permission "rank.jrmod":
+				message "&4You do not have access to this command."
+			else:
+				execute console command "mv tp %arg-1% ul_S31"
+				message "&aTeleported %arg-1% &ato spawn."

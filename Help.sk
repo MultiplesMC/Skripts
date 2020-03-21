@@ -1,0 +1,39 @@
+
+function helpMenu(p: player, i: integer):
+    if {_i} == 0:
+        open virtual chest inventory with size 3 named "&cHelp Menu" to {_p}
+        loop 27 times:
+            format gui slot (loop-value - 1) of {_p} with gray stained glass pane named "" to do nothing
+        format gui slot 11 of {_p} with glowing iron chestplate named "&6&lWarzone Information" with lore "&fClick for information" to run:
+            helpMenu({_p}, 1)
+        format gui slot 13 of {_p} with glowing iron pickaxe named "&b&lMining Information" with lore "&fClick for information" to run:
+            helpMenu({_p}, 2)
+        format gui slot 15 of {_p} with glowing redstone torch named "&c&lCell Information" with lore "&fClick for information" to run:
+            helpMenu({_p}, 3)
+    else:
+        open virtual chest inventory with size 4 named "" to {_p}
+        loop 36 times:
+            format gui slot (loop-value - 1) of {_p} with gray stained glass pane named "" to do nothing
+
+        format gui slot 31 of {_p} with barrier block named "&cback to main menu" to run function helpMenu({_p}, 0)
+
+        if {_i} == 1:
+            formatInfoItem(11, {_p}, glowing iron chestplate named "&6Warzone &7▪&f Outposts &7(Disabled)" with lore "" and "&7Capture outposts in the &cWarzone" and "&7once an event starts to gain rewards" and "")
+            formatInfoItem(13, {_p}, glowing ender chest named "&6Warzone &7▪&f Envoys" with lore "" and "&7Capture envoys in the &cWarzone" and "&7once an event starts to gain rewards" and "")
+            formatInfoItem(15, {_p}, glowing iron sword named "&6Warzone &7▪&f Kill Rewards" with lore "" and "&7Gain rewards by killing players" and "&7in the &cWarzone" and "")
+            
+        else if {_i} == 2:
+            formatInfoItem(10, {_p}, glowing iron pickaxe named "&bMining &7▪&f Leveling" with lore "" and "&7Mine stone in the &cWarzone &7to" and "&7upgrade your pickaxe level. Find" and "&7crate keys and tokens while mining")
+            formatInfoItem(13, {_p}, glowing diamond ore named "&bMining &7▪&f Ores" with lore "" and "&7Level 1 - Stone" and "&7Level 10 - &8Coal Ore" and "&7Level 50 - &fIron Ore" and "&7Level 100 - &6Gold Ore" and "&7Level 200 - &9Lapis lazuli" and "&7Level 350 - &cRedstone" and "&7Level 500 - &bDiamond Ore" and "")
+            formatInfoItem(16, {_p}, glowing prismarine shard named "&bMining &7▪&f Keys" with lore "" and "&7Crate keys can be found in the &cWarzone&7." and "&7These also have a fail chance.")
+
+        else if {_i} == 3:
+            formatInfoItem(12, {_p}, glowing bucket named "&cCells &7▪&f Cell Generator" with lore "" and "&7Stand in your cell to generate" and "&7income. Use money to buy valuable items in the shop" and "")
+            formatInfoItem(14, {_p}, glowing enchantment table named "&cCells &7▪&f Cell Upgrades" with lore "" and "&7- &eProfit Per Minute" and "&7- &eExcavator" and "")
+
+function formatInfoItem(s: integer, p: player, i: item):
+    format gui slot {_s} of {_p} with {_i} to do nothing
+
+command /help:
+    trigger:
+        helpMenu(player, 0)

@@ -1,0 +1,394 @@
+#
+# Multiples v.3
+#
+# Written by Vinixs
+
+options:
+  prefix: &8&l(&c&l!&8&l)
+  logo: &c&lMultiples
+  season: &b&k!i &c&lSeason 3 &b&k!i 
+
+
+variables:
+  {Level::%player%} = 1
+  {Gems::%player%} = 0
+  {Tokens::%player%} = 0
+  {Skit::%player%} = false
+  {jboost::%player%} = false
+  {Prestige::%player%} = 0
+
+
+#
+# Timed Events
+#
+
+on place:
+  if world is "ul_S31":
+    if player is not op:
+      cancel event
+
+every 1 second in "ul_S31":
+  loop all players:
+    set loop-player's tablist name to "&7(&c&o%{rank.%UUID of loop-player%}%&7) &7%loop-player% &7(&7%{Level::%loop-player%}%&7:&b%{Prestige::%loop-player%}%&7)"
+
+
+every 68 minutes in "ul_S31":
+  execute console command "save-all"
+  broadcast ""
+  broadcast "    &c&lMultiples AutoSave"
+  broadcast "&7Saving the server, expect lag."
+  broadcast ""
+
+every 43 minutes in "ul_S31":
+  broadcast ""
+  broadcast "     &b&lCells"
+  broadcast "&7&o    &c● &7Stand in a cell at spawn to generate income"
+  broadcast "&7&o    &c● &7Upgrade your cell to increase profit, and to find crate keys and ingots"
+  broadcast "&7&o    &c● &7Afking in cells is allowed. So take advantage of the generators"
+  broadcast ""
+
+every 22 minutes in "ul_S31":
+  broadcast ""
+  broadcast "     &3&lDiscord"
+  broadcast "&8» &7&nUse &b&n/Discord &7&nto join the discord!"
+  broadcast ""
+
+every 1 second:
+  if {abooster} is not set:
+    set {abooster} to "Inactive"
+
+function botCheck(p: player):
+  stop if {_p} has permission "rank.mod"
+  set {_u} to uuid of {_p}
+  set {verified.%{_u}%} to false
+  set {_int1} to a random integer between 1 and 10
+  set {_int2} to a random integer between 10 and 20
+  set {captchacode.%{_u}%} to {_int1} + {_int2}
+  send title "&cMath! &7&n%{_int1}%&8 + &7&n%{_int2}%" with subtitle "&c/verify <answer>" to {_p} for 15 seconds
+
+command /verify [<text>]:
+  trigger:
+    set {_a} to arg-1 parsed as integer
+    if arg-1 is not set:
+      kick player due to "&cFailed the captcha, Join and try again"
+    else if {_a} != {captchacode.%uuid of player%}:
+      kick player due to "&cFailed the captcha, Join and try again"
+    else:
+      send "&aVerified!"
+      set {verified.%uuid of player%} to true
+      delete {captchacode.%uuid of player%}
+
+on join:
+  wait 10 ticks
+  botCheck(player)
+  apply potion of jump boost 2 to player for 999 days
+
+on respawn:
+	teleport player to location(505.5, 119, 7.5, world("ul_S31"))
+
+
+every 1 second:
+  loop all players:
+    if {Level::%loop-player%} is not set:
+      set {Level::%loop-player%} to 1
+    if {Prestige::%loop-player%} is not set:
+      set {Prestige::%loop-player%} to 0
+    if {Gems::%loop-player%} is not set:
+      set {Gems::%loop-player%} to 0
+    if {Mined::%loop-player%} is not set:
+      set {Mined::%loop-player%} to 0
+    if {LevelPrice::%loop-player%} is not set:
+      set {LevelPrice::%loop-player%} to 100
+    if {Tokens::%loop-player%} is not set:
+      set {Tokens::%loop-player%} to 0
+    if {_Kdr} is not set:
+      set {_Kdr} to {Kills::%loop-player%} / {Deaths::%loop-player%}
+    if {Xp::%loop-player%} is not set:
+      set {Xp::%loop-player%} to 0
+every 10 minutes:
+  set {_count} to 3
+  loop 3 times:
+    broadcast "&7Clearing entities in %{_count}%..."
+    subtract 1 from {_count}
+    wait 1 second
+  clear entities
+  broadcast "&7(&cMultiples&7) &7Entities has been cleared" 
+
+#
+# Events
+#
+
+
+on hunger meter change:
+  cancel event
+
+every 1 second:
+  loop all players:
+    if {rank.%UUID of loop-player%} is not set:
+      set {rank.%UUID of loop-player%} to "Default"
+
+on load:
+  execute console command "/hd reload"
+  execute console command "/essentials rl"
+  broadcast ""
+  broadcast "&7&o➤ &c&oMultiples Main.sk v1.0 loaded"
+  broadcast ""
+  set {items::*} to blue concrete powder, bedrock, golden axe, diamond helmet, diamond sword, blaze rod, light blue concrete, player head, zombie head, gold ingot, wooden pickaxe, banner, pufferfish spawn egg, blaze spawn egg, zombie spawn egg, stone brick slab, smooth stone, water bucket, lava bucket, nametag, dark oak leaves, shulker box, anvil, wool, and sponge
+
+on rightclick:
+  if clicked block is red stained glass:
+    execute player command "/shop"
+    show mob spawner flames at event-block
+
+on item damage:
+  repair player's item
+
+on join:
+  set {_ploc} to player's location
+  show smoke particle at {_ploc}
+
+on join:
+  if {_AllJoinCount} is not set:
+    set {_AllJoinCount} to 1
+    set join message to "&a+ &7%player%"
+    execute player command "mspawn"
+  else:
+    add 1 to {_AllJoinCount}
+    set join message to "&a+ &7%player%"
+    execute player command "mspawn"
+
+on firework explode:
+  cancel event
+
+on first join:
+  send ""
+  send "&c&lWelcome to Multiples "
+  send ""
+  send ""
+  send ""
+  set join message to "{@prefix} &c%player% &7has joined for the first time &7&o(##%size of all offline players%)"
+  give player a diamond pickaxe named "&7Mine stone to activate stats and scoreboard!"
+  equip player with all leather armor
+  give 1 prismarine shard named "&7&l(&c&l!&7&l) &7&nCrate Key" to player
+  give 2 prismarine shard named "&7&l(&c&l!&7&l) &4&nCrate Key" to player
+
+on quit:
+  set leave message to "&c- &7%player%"
+
+on death:
+  victim is a player
+  attacker is a player
+  add 1 to {Kills::%damager%}
+  add 50 to {Xp::%damager%}
+  execute console command "eco give %attacker% 200"
+  send "&7&l➤ &a+ &7$200 & 50XP" to attacker
+  add 1 to {Deaths::%victim%}
+
+on death of player:
+  broadcast "&c&lDEATH &7%player%"
+  wait 3 seconds
+  apply potion of jump boost 2 to player for 999 days
+
+
+#
+# Commands
+#
+
+
+# command /spawn:
+#   trigger:
+#     teleport player to location(505.5, 119, 7.5, world("ul_S31"), 51, 2)
+
+command /msetspawn:
+  permission: rank.srmod
+  permission message: No Permission
+  trigger:
+    if {Spawn} is not set:
+      set {Spawn} to player's location
+      send "&c&o➤ &7Spawn set"
+    else:
+      send "&c&o➤ &cSpawn is already set"
+
+command /levelprice:
+  permission: rank.admin
+  permission message: No Permission
+  trigger:
+    send ""
+    send "{@prefix} &7Your levelprice should be &c&o%{LevelPrice::%player%}%"
+    send ""
+
+command /prestigetop:
+  aliases: ptop
+  trigger:
+    set {_sprestiges::*} to sorted {Prestige::*} from highest to lowest with format "@index"
+    set {_ind} to 0
+    send "&c&lPRESTIGE LEADERBOARD" to player
+    loop {_sprestiges::*}:
+      if {_ind} < 9:
+        add 1 to {_ind}
+        set {_pl} to "%loop-value parsed as offline player%"
+        set {_ul} to {Prestige::%loop-value%}
+        send "&8%{_ind}%&8. &c%{_pl}%&7: [&c%{_ul}%&7]" to player
+      else:
+        exit loop
+
+command /leveltop:
+  aliases: ltop
+  trigger:
+    set {_slevels::*} to sorted {Level::*} from highest to lowest with format "@index"
+    set {_ind} to 0
+    send "&c&lLEVEL LEADERBOARD" to player
+    loop {_slevels::*}:
+      if {_ind} < 9:
+        add 1 to {_ind}
+        set {_pl} to "%loop-value parsed as offline player%"
+        set {_ul} to {Level::%loop-value%}
+        send "&8%{_ind}%&8. &c%{_pl}%&7: [&c%{_ul}%&7]" to player
+      else:
+        exit loop
+
+command /blocktop:
+  aliases: btop
+  trigger:
+    set {_smined::*} to sorted {mined::*} from highest to lowest with format "@index"
+    set {_ind} to 0
+    send "&c&lBLOCKS BROKEN LEADERBOARD" to player
+    loop {_smined::*}:
+      if {_ind} < 9:
+        add 1 to {_ind}
+        set {_pl} to "%loop-value parsed as offline player%"
+        set {_ul} to {mined::%loop-value%}
+        send "&8%{_ind}%&8. &c%{_pl}%&7: [&c%{_ul}%&7]" to player
+      else:
+        exit loop
+
+
+command /resetall [<text>]:
+  trigger:
+    if player has permission "rank.admin":
+      if arg 1 is not set:
+        send ""
+        send "{@prefix} &c&lWarning"
+        send ""
+        send "&7&o    &c● &7&oThis will reset &c&n&oALL&7&o stats."
+        send ""
+        send "&7&o    &c● &7&o/resetall (message)"
+        send ""
+      else:
+        broadcast ""
+        broadcast "&c&lSeason Reset!"
+        broadcast ""
+        broadcast "&7&o    &c● &c&oThanks for playing!"
+        broadcast ""
+        broadcast "&7&o    &c● &7&o%arg-1%"
+        broadcast ""
+        broadcast "&7&o(Resetting all stats...)"
+        wait 5 seconds
+        set {Level::*} to 1
+        set {Xp::*} to 0
+        set {Gems::*} to 0
+        set {coal::*} to false
+        set {iron::*} to false
+        set {gold::*} to false
+        set {lapis::*} to false
+        set {redstone::*} to false
+        set {diamond::*} to false
+        set {Prestige::*} to false
+        set {lvlcell::*} to 1
+        set {Mined::*} to 0
+        set {Tokens::*} to 0
+        set {rmult::*} to 1
+        set {pmult::*} to 1
+        execute console command "eco reset *"
+        broadcast ""
+        broadcast "{@prefix} &aReset finished!"
+        broadcast ""
+
+
+
+command /level [<player>]:
+    trigger:
+        if {Level::%player%} is not set:
+            set {Level::%player%} to 1
+        if arg 1 is not set:
+            message "{@prefix} &7You're level &c%{Level::%player%}%"
+        else:
+            message "{@prefix} &c%arg 1%'s &7level is &c%{gold::%arg 1%}%"
+
+
+command /setlevel [<integer>] [<offline player>]:
+	permission: *
+	trigger:
+		if arg-1 is set:
+			if arg-2 is set:
+				set {level::%arg-2%} to arg-1
+				send "Set level to %arg-1%"
+			else:
+				set {level::%player%} to arg-1
+		else:
+			send "usage: /setlevel <level> [player]"
+
+command /setprestige [<integer>] [<offline player>]:
+	permission: *
+	trigger:
+		if arg-1 is set:
+			if arg-2 is set:
+				set {Prestige::%arg-2%} to arg-1
+				send "Set prestige to %arg-1%"
+			else:
+				set {Prestige::%player%} to arg-1
+		else:
+			send "usage: /setprestige <level> [player]"
+
+command /tokens [<offline player>] [<integer>]:
+  permission: rank.admin
+  trigger:
+    if arg 1 is set:
+      if arg 2 is set:
+        add arg 2 to {Tokens::%arg-1%}
+        send "{@prefix} &7added &c%arg-2% &7to &c%arg-1%&7." to player
+      else:
+        send "" to player
+        send "{@prefix} &7/tokens (user) (amount)" to player
+        send "" to player
+    else:
+      send "" to player
+      send "{@prefix} &7/tokens (user) (amount)" to player
+      send "" to player
+
+
+command /alerts [<text>]:
+  trigger:
+    if player has permission "rank.srmod":
+      if arg 1 is not set:
+        send ""
+        send "{@prefix} &7/alerts (text)"
+        send ""
+      else:
+        broadcast ""
+        broadcast "{@prefix} &c&lAlert"
+        broadcast "&7&o    &c● &7&o%arg-1%"
+        broadcast ""
+
+command /serverstats:
+  permission: rank.admin
+  permission message: No Permission
+  trigger:
+    send ""
+    send "&7&l≫ &cUnique Joins: &7&o%{AllJoinCount}%"
+    send "&7&l≫ &cTotal Joins: &7&o%{JoinCount}%"
+    send "&7&l≫ "
+    send "&7&l≫"
+    send ""
+
+#
+# Shop
+#
+
+command /resettokens [<player>] [<integer>]:
+  permission: rank.admin
+  permission message: No Permission
+  trigger:
+    if arg 1 is set:
+      delete {Tokens::%arg-1%}
+      send "&7&o* &cReset %arg-1%'s tokens'"

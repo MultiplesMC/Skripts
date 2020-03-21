@@ -1,0 +1,77 @@
+#
+#
+#
+
+on load:
+	execute console command "mv load cell_template"
+
+options:
+	p: &7(&cMultiples&7)
+
+on join:
+	if {pcells::*} does not contain player:
+		wait 1 tick
+		message "&7Welcome, &c%player%&7! Do &c/cellhome &7to create your personal cell"
+
+on quit:
+	loop all players:
+		if loop-player's world is "zcell_%player%":
+			make loop-player execute command "spawn"
+	wait 20 seconds
+	execute console command "mv unload zcell_%player%"
+
+command /cellhome [<text>]:
+	trigger:
+		if player is {clans::%{clans::%player%}%::owner}:
+			if {pcells::*} does not contain player:
+				execute console command "mv clone plot_template zcell_%player%"
+				message "&aYour cell has been created!"
+				add player to {pcells::*}
+				execute command "mv tp %player% zcells_%player%"
+			else:
+				execute console command "mv load zcells_%player%"
+				message "&7&oTeleporting you to your cell..."
+				execute command "mv tp %player% zcells_%player%"
+		else:
+			send ""
+			send "{@p} &7You need to create a cell to generate a personal cell!"
+			send ""
+
+command /resetpcells [<text>]:
+	permission: *
+	permission message: &4You do not have access to this command.
+	trigger:
+		if arg-1 is not set:
+			message "&cType &b/resetpcells confirm &cto confirm"
+		else:
+			if arg-1 is not "confirm":
+				message "&cUnknown argument."
+			else:
+				loop {pcells::*}:
+					execute console command "mv delete zcells_%loop-value%"
+					execute console command "mvconfirm"
+				delete {pcells::*}
+				message "&cReset all cells!"
+
+command /resetpcell <offlineplayer>:
+	permission: *
+	permission message: &4You do not have access to this command.
+	trigger:
+		if {pcells::*} does not contain arg-1:
+			message "&c%arg-1% &cdoes not own a cell"
+		else:
+			remove arg-1 from {pcells::*}
+			message "&cReset &c%arg-1%&c's cell!"
+			execute console command "mv delete zcells_%arg-1%"
+			execute console command "mvconfirm"
+
+command /visit <offline player>:
+	trigger:
+		if arg-1 is not online:
+			message "&c%arg-1% &cis not currently online!"
+		else:
+			if arg-1's world is not "zcells_%arg-1%":
+				message "&c%arg-1% &cis not in their cell!"
+			else:
+				message "&a&oTelepoting you to &a&o%arg-1%&a&o's cell..."
+				execute console command "mv tp %player% zcells_%arg-1%"

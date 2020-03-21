@@ -1,0 +1,91 @@
+#
+#
+#
+
+options:
+    p: &7(&cMultiples&7)
+
+variables:
+    {rmult::%player%} = 1
+    {pmult::%player%} = 1
+
+# function rankXP(p: player, i: integer):
+#     if {_i} == 0:
+        
+
+# function prestigeXP(p: player, i: integer):
+#     if {_i} == 0:
+#         if {pmult::%{_p}%} is not set:
+#             set {pmult::%{_p}%} to 1
+#         add {pmult::%{_p}%} to {Xp::%{_p}%}
+
+function getMultiplier(p: player) :: number:
+    if group of {_p} is "VIP":
+        set {_rmult} to 1.5
+    if group of {_p} is "MVP":
+        set {_rmult} to 3.5
+    if group of {_p} is "MVP+":
+        set {_rmult} to 5
+    else:
+        set {_rmult} to 1
+    set {rmult::%{_p}%} to {_rmult}
+
+    if {Prestige::%{_p}%} = 0:
+        set {_pmult} to 0
+    else if {Prestige::%{_p}%} is not seT:
+        set {_pmult} to 0
+    else if {Prestige::%{_p}} = 1:
+        set {_pmult} 1 + ({Prestige::%{_p}%} * 0.5)
+=
+    set {pmult::%{_p}%} to {_pmult}
+
+    if {_rmult} + {_pmult} = 1:
+        return 1
+    else:
+        return {_rmult} + {_pmult}
+
+
+#function checkPres(p: player):
+#    if {pcount} is not set:
+#        set {pcount} to 1
+#    if {Prestige::%{_p}%} > {pcount}:
+        
+function prestigeC(p: player, i: integer):
+    if {_i} == 0:
+        if {Level::%{_p}%} >= 1000:
+            if {pmult::%{_p}%} is not set:
+                set {pmult::%{_p}%} to 1
+            set {Level::%{_p}%} to 1
+            set {Xp::%{_p}%} to 1
+            add 1 to {Prestige::%{_p}%}
+            add .5 to {pmult::%{_p}%}
+            set {coal::%{_p}%} to false
+            set {iron::%{_p}%} to false
+            set {gold::%{_p}%} to false
+            set {redstone::%{_p}%} to false
+            set {lapis::%{_p}%} to false
+            set {diamond::%{_p}%} to false
+            make console execute command "system:lcrate %{_p}% 1"
+            make console execute command "system:lcrate %{_p}% 2"
+            send "{@p} &7Successfully prestiged! You're now prestige %{Prestige::%{_p}%}%" to {_p}
+            broadcast ""
+            broadcast "&6&l&k|| &c%{_p}% &7has just prestiged &7(&c%{Prestige::%{_p}%}%&7) &6&l&k||"
+            broadcast ""
+        else:
+            send "{@p} &7You need to be level 1000 to do this" to {_p}
+
+command /prestige:
+    trigger:
+        prestigeC(player, 0)  
+
+command /multipliers:
+    trigger:
+        send ""
+        send "&fRank Multiplier&f: &c%{rmult::%player%}%x"
+        send "&bPrestige Multipler&b: &c%{pmult::%player%}%x"
+        send ""
+
+# on mine:
+#     if {blocklist::*} contains event-block:
+#         rankXP(player, 0)
+#         prestigeXP(player, 0)

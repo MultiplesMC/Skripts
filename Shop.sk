@@ -1,0 +1,98 @@
+options:
+    logoshop: &2&lSHOP &8»
+command /shop:
+    trigger:
+        shop(player, 0)
+function formatShopRank(s: integer, p: player, i: item, c: integer, n: text, r: text):
+    format gui slot {_s} of {_p} with {_i} named "%{_n}%" with lore "" and "&a$&a%{_c}%" and "" to run:
+        if {_p}'s balance >= {_c}:
+            send "{@logoshop} &aYou bought %{_n}%&a!" to {_p}
+            execute console command "system:rank %{_p}% %{_r}%"
+            set {rank.%{_p}%} to "%{_r}%"
+            remove {_c} from {_p}'s balance
+        else:
+            close {_p}'s inventory
+            send "{@logoshop} &cYou do not have enough for this!" to {_p}
+            play sound "entity.villager.no" with volume 1000000 and pitch 1 to {_p}
+function formatShopCrate(s: integer, p: player, i: item, c: integer, n: text):
+    format gui slot {_s} of {_p} with {_i} named "%{_n}%" with lore "" and "&a$&a%{_c}%" and "" to run:
+        if {_p}'s balance >= {_c}:
+            send "{@logoshop} &aYou bought %{_n}%&a!" to {_p}
+            give {_p} prismarine shard named "%{_n}%"
+            remove {_c} from {_p}'s balance
+        else:
+            close {_p}'s inventory
+            send "{@logoshop} &cYou do not have enough for this!" to {_p}
+            play sound "entity.villager.no" with volume 1000000 and pitch 1 to {_p}
+function formatShopArmor(s: integer, p: player, t: text, c: integer, n: text, i: item):
+    format gui slot {_s} of {_p} with {_i} named "%{_n}%" with lore "" and "&a$&a%{_c}%" and "" to run:
+        if {_p}'s balance >= {_c}:
+            send "{@logoshop} &aYou bought %{_n}%&a!" to {_p}
+            set {_helmet} to "%{_t}% helmet" parsed as item
+            set {_chest} to "%{_t}% chestplate" parsed as item
+            set {_legs} to "%{_t}% leggings" parsed as item
+            set {_boots} to "%{_t}% boots" parsed as item
+            set the helmet of {_p} to {_helmet}
+            set the chestplate of {_p} to {_chest}
+            set the leggings of {_p} to {_legs}
+            set the boots of {_p} to {_boots}
+            remove {_c} from {_p}'s balance
+        else:
+            close {_p}'s inventory
+            send "{@logoshop} &cYou do not have enough for this!" to {_p}
+            play sound "entity.villager.no" with volume 1000000 and pitch 1 to {_p}
+function formatShopGen(p: player, s: integer, i: item, n: text, c: integer, dc: text):
+    format gui slot {_s} of {_p} with {_i} named "%{_n}%" with lore "" and "&aClan Cost: $%{_dc}%" and "" to run:
+        if {clans::%{_p}%} is not set:
+            send "{@logoshop} &cYou must be in a clan to buy this!" to {_p}
+        else:
+            if {clanbal::%{clans::%player%}%} >= {_c}:
+                remove {_c} from {clanbal::%{clans::%{_p}%}%}
+                send "{@logoshop} &aYou bought %{_n}%&a!" to {_p}
+                give {_p} 1 of {_i} named "%{_n}%"
+            else:
+                close {_p}'s inventory
+                send "{@logoshop} &cYou do not have enough for this!" to {_p}
+function shop(p: player, i: integer):
+    if {_i} == 0:
+        open chest with 3 rows named "Shop" to {_p}
+        format gui slot 10 of {_p} with paper named "&aRanks" with lore "" and "&7Click to open" and "" to run:
+            shop({_p}, 1)
+        format gui slot 12 of {_p} with prismarine shard named "&cCrate Keys" with lore "" and "&7Click to open" and "" to run:
+            shop({_p}, 2)
+        format gui slot 14 of {_p} with iron chestplate named "&fArmor Sets" with lore "" and "&7Click to open" and "" to run:
+            shop({_p}, 3)
+        format gui slot 16 of {_p} with diamond ore named "&bGenerators" with lore "" and "&7Click to open" and "" to run:
+            shop({_p}, 4)
+    if {_i} == 1:
+        open chest with 3 rows named "Ranks" to {_p}
+        formatShopRank(11, {_p}, paper, 5000000, "&a&lVIP &7Rank", "VIP")
+        formatShopRank(13, {_p}, paper, 15000000, "&b&lMVP &7Rank", "MVP")
+        formatShopRank(15, {_p}, paper, 20000000, "&6&lMVP+ &7Rank", "MVP+")
+        format gui slot 22 of {_p} with arrow named "&cBack" to run:
+            shop({_p}, 0)
+    if {_i} == 2:
+        open chest with 3 rows named "Crate Keys" to {_p}
+        formatShopCrate(11, {_p}, prismarine shard, 150000, "&7&l(&c&l!&7&l) &7&nCrate Key")
+        formatShopCrate(13, {_p}, prismarine shard, 300000, "&7&l(&c&l!&7&l) &4&nCrate Key")
+        formatShopCrate(15, {_p}, prismarine shard, 900000, "&7&l(&c&l!&7&l) &6&nCrate Key")
+        format gui slot 22 of {_p} with arrow named "&cBack" to run:
+            shop({_p}, 0)
+    if {_i} == 3:
+        open chest with 3 rows named "Armor" to {_p}
+        formatShopArmor(10, {_p}, "leather", 0, "&eFree - Leather Armor", leather helmet)
+        formatShopArmor(12, {_p}, "chainmail", 100000, "&7Chainmail Set", chainmail helmet)
+        formatShopArmor(14, {_p}, "iron", 300000, "&fIron Set", iron helmet)
+        formatShopArmor(16, {_p}, "diamond", 800000, "&bDiamond Set", diamond helmet)
+        format gui slot 22 of {_p} with arrow named "&cBack" to run:
+            shop({_p}, 0)
+    if {_i} == 4:
+        open chest with 3 rows named "Generators" to {_p}
+        formatShopGen({_p}, 0, coal ore, "&8Coal &7Generator", 15000, "15,000")
+        formatShopGen({_p}, 1, iron ore, "&fIron &7Generator", 32000, "32,000")
+        formatShopGen({_p}, 2, gold ore, "&6Gold &7Generator", 50000, "50,000")
+        formatShopGen({_p}, 3, lapis ore, "&9Lapis &7Generator", 84000, "84,000")
+        formatShopGen({_p}, 4, redstone ore, "&4Redstone &7Generator", 100000, "100,000")
+        formatShopGen({_p}, 5, diamond ore, "&bDiamond &7Generator", 200000, "200,000")
+        format gui slot 22 of {_p} with arrow named "&cBack" to run:
+            shop({_p}, 0)

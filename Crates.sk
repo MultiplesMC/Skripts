@@ -1,0 +1,517 @@
+options:
+    p: &7&l(&c!&7&l)
+ 
+on rightclick on a black shulker box:
+    if {crate.%location of block%} is set:
+        if player is holding a prismarine shard named "&7&l(&c&l!&7&l) &7&nCrate Key":
+            cancel event
+            remove 1 prismarine shard named "&7&l(&c&l!&7&l) &7&nCrate Key" from player
+            show mob spawner flames at event-block
+            chance of 20%:
+                add 10 to {Tokens::%player%}
+                send "&7[&c&lM&7] &7You have received &c&o10x Tokens&7!"
+                stop
+            chance of 20%:
+                make console execute "/eco give %player% 2000"
+                send "&7[&c&lM&7] &7You have received &c$2000&7!"
+                stop
+            chance of 15%:
+                add 25 to {Tokens::%player%}
+                send "&7[&c&lM&7] &7You have received &c&o25x Tokens&7!"
+                stop
+            chance of 15%:
+                make console execute "/eco give %player% 5000"
+                send "&7[&c&lM&7] &7You have received &c$5000&7!"
+                stop
+            chance of 8%:
+                add 50 to {Tokens::%player%}
+                send "&7[&c&lM&7] &7You have received &c&o50x Tokens&7!"
+                stop
+            chance of 7%:
+                make console execute "/eco give %player% 25000"
+                send "&7[&c&lM&7] &7You have received &c$25000&7!"
+                stop
+            chance of 6%:
+                add 100 to {Tokens::%player%}
+                send "&7[&c&lM&7] &7You have received &c&o100x Tokens&7!"
+                stop
+            chance of 6%:
+                make console execute "/eco give %player% 100000"
+                send "&7[&c&lM&7] &7You have received &c$100000&7!"
+                stop
+            chance of 1%:
+                make console execute command "system:lcrate %player% 1"
+                send "&7[&c&lM&7] &7You have received a &aCosmic Crate"
+                broadcast ""
+                broadcast "&2&l&k|| &c%player% &7won a &aCosmic Crate &7from a crate! &2&l&k||"
+                broadcast ""
+                stop
+            else:
+                send "&7[&c&lM&7] &cYour key has failed!"
+        else:
+            send "&7[&c&lM&7] You need a &cCrate &7key to use this!"
+            push player backwards at speed 2
+            cancel event
+ 
+command /system:gcrate [<player>] [<text>]:
+    permission: rank.admin
+    permission message: &cNo Permission
+    trigger:
+        if arg-1 is a player:
+            if arg-2 is "1" or "2" or "3":
+                if arg-2 is "1":
+                    give arg-1 prismarine shard named "&7&l(&c&l!&7&l) &7&nCrate Key"
+                    send "&7&o* &cYou have been given &7x1 &7&nCrate key" to arg-1
+                    broadcast ""
+                    broadcast "&2&l&k|| &c%arg-1% &7has bought &7x1 &7&nCrate Key&7 &2&l&k||"
+                    broadcast ""
+                if argument 2 is "2":
+                    give arg-1 prismarine shard named "&7&l(&c&l!&7&l) &4&nCrate Key"
+                    send "&7&o* &cYou have been given &7x1 &4&nCrate key" to arg-1
+                    broadcast ""
+                    broadcast "&2&l&k|| &c%arg-1% &7has bought &7x1 &4&nCrate Key&7 &2&l&k||"
+                    broadcast ""
+                if argument 2 is "3":
+                    give arg-1 prismarine shard named "&7&l(&c&l!&7&l) &6&nCrate Key"
+                    send "&7&o* &cYou have been given &7x1 &6&nCrate key" to arg-1
+                    broadcast ""
+                    broadcast "&2&l&k|| &c%arg-1% &7has bought &7x1 &6&nCrate Key&7 &2&l&k||"
+                    broadcast ""
+ 
+ 
+on rightclick on a red shulker box:
+    if {crate2.%location of block%} is set:
+        if player's held item is prismarine shard named "&7&l(&c&l!&7&l) &4&nCrate Key":
+            cancel event
+            remove 1 prismarine shard named "&7&l(&c&l!&7&l) &4&nCrate Key" from player
+            show mob spawner flames at event-block
+            chance of 20%:
+                add 50 to {Tokens::%player%}
+                send "&7[&c&lM&7] &7You have received &c&o50x Tokens&7!"
+                stop
+            chance of 20%:
+                make console execute "/eco give %player% 5000"
+                send "&7[&c&lM&7] &7You have received &c$5000&7!"
+                stop
+            chance of 15%:
+                add 50 to {Tokens::%player%}
+                send "&7[&c&lM&7] &7You have received &c&o50x Tokens&7!"
+                stop
+            chance of 15%:
+                make console execute "/eco give %player% 10000"
+                send "&7[&c&lM&7] &7You have received &c$10000&7!"
+                stop
+            chance of 8%:
+                add 75 to {Tokens::%player%}
+                send "&7[&c&lM&7] &7You have received &c&o75x Tokens&7!"
+                stop
+            chance of 7%:
+                make console execute "/eco give %player% 50000"
+                send "&7[&c&lM&7] &7You have received &c$50000&7!"
+                stop
+            chance of 6%:
+                add 250 to {Tokens::%player%}
+                send "&7[&c&lM&7] &7You have received &c&o250x Tokens&7!"
+                stop
+            chance of 6%:
+                make console execute "/eco give %player% 1000000"
+                send "&7[&c&lM&7] &7You have received &c$1000000&7!"
+                stop
+            chance of 1%:
+                make console execute command "system:lcrate %player% 2"
+                send "&7[&c&lM&7] &7You have received a &2Cosmic Crate"
+                broadcast ""
+                broadcast "&2&l&k|| &c%player% &7won a &2Cosmic Crate &7from a crate! &2&l&k||"
+                broadcast ""
+                stop
+            else:
+                send "&7[&c&lM&7] &cYour key has failed!"
+        else:
+            send "&7[&c&lM&7] You need a &4Crate &7key to use this!"
+            push player backwards at speed 3
+            cancel event
+ 
+on rightclick on a orange shulker box:
+    if {crate3.%location of block%} is set:
+        if player's held item is prismarine shard named "&7&l(&c&l!&7&l) &6&nCrate Key":
+            cancel event
+            remove 1 prismarine shard named "&7&l(&c&l!&7&l) &6&nCrate Key" from player
+            show mob spawner flames at event-block
+            chance of 20%:
+                add 100 to {Tokens::%player%}
+                send "&7[&c&lM&7] &7You have received &c&o100x Tokens&7!"
+                stop
+            chance of 20%:
+                make console execute "/eco give %player% 10000"
+                send "&7[&c&lM&7] &7You have received &c$10000&7!"
+                stop
+            chance of 15%:
+                add 145 to {Tokens::%player%}
+                send "&7[&c&lM&7] &7You have received &c&o145x Tokens&7!"
+                stop
+            chance of 15%:
+                make console execute "/eco give %player% 25000"
+                send "&7[&c&lM&7] &7You have received &c$25000&7!"
+                stop
+            chance of 8%:
+                add 200 to {Tokens::%player%}
+                send "&7[&c&lM&7] &7You have received &c&o200x Tokens&7!"
+                stop
+            chance of 7%:
+                make console execute "/eco give %player% 75000"
+                send "&7[&c&lM&7] &7You have received &c$75000&7!"
+                stop
+            chance of 6%:
+                add 325 to {Tokens::%player%}
+                send "&7[&c&lM&7] &7You have received &c&o325x Tokens&7!"
+                stop
+            chance of 6%:
+                make console execute "/eco give %player% 3000000"
+                send "&7[&c&lM&7] &7You have received &c$3000000&7!"
+                stop
+            chance of 1%:
+                give player chest named "&7&l(&c&l!&7&l) &2&n&lCosmic Crate&7 &7&o(Right-Click)" with lore "" and "&2&l&k|| &2Tier II &7Cosmic crate &2&l&k||" and "" and "&c● &c&ox7 &7Creeper Spawners" and "&c● &c&ox1 &2&l&nLoki Set" and "&7● &c&ox64 &4Crate Keys" and "&7● &c&ox32 &7&nCrate Keys" and "&7● &c&ox24 &bFlight Orbs &7&o(5m)" and "&7● &c&ox256 &7Diamond Blocks" and  ""
+                send "&7[&c&lM&7] &7You have received a &2Cosmic Crate"
+                broadcast ""
+                broadcast "&2&l&k|| &c%player% &7won a &2Cosmic Crate &7from a crate! &2&l&k||"
+                broadcast ""
+                stop
+            else:
+                send "&7[&c&lM&7] &cYour key has failed!"
+        else:
+            send "&7[&c&lM&7] You need a &6Crate &7key to use this!"
+            cancel event
+ 
+ 
+on rightclick:
+    if player is holding a magma cream named "&cx5 Token" with lore "&7&o(Right click to redeem)":
+        remove 1 of player's held item from player
+        add 5 to {Tokens::%player%}
+        send "&8&l* &7Redeemed &cx5 Token"
+    if player is holding a magma cream named "&cx20 Token" with lore "&7&o(Right click to redeem)":
+        remove 1 of player's held item from player
+        add 20 to {Tokens::%player%}
+        send "&8&l* &7Redeemed &cx20 Token"
+    if player is holding a magma cream named "&cx32 Token" with lore "&7&o(Right click to redeem)":
+        remove 1 of player's held item from player
+        add 32 to {Tokens::%player%}
+        send "&8&l* &7Redeemed &cx32 Token"
+    if player is holding a magma cream named "&cx64 Token" with lore "&7&o(Right click to redeem)":
+        remove 1 of player's held item from player
+        add 64 to {Tokens::%player%}
+        send "&8&l* &7Redeemed &cx64 Token"
+ 
+ 
+command /withdraw [<integer>]:
+    trigger:
+        if arg-1 is set:
+            if arg-1 is 5:
+                if {Tokens::%player%} >= 5:
+                    give 1 magma cream named "&cx5 Token" with lore "&7&o(Right click to redeem)" to player
+                    remove 5 from {Tokens::%player%}
+            else if arg-1 is 5:
+                if {Tokens::%player%} >= 20:
+                    give 1 magma cream named "&cx20 Token" with lore "&7&o(Right click to redeem)" to player
+                    remove 20 from {Tokens::%player%}
+            else if arg-1 is 5:
+                if {Tokens::%player%} >= 32:
+                    give 1 magma cream named "&cx32 Token" with lore "&7&o(Right click to redeem)" to player
+                    remove 32 from {Tokens::%player%}
+            else if arg-1 is 64:
+                if {Tokens::%player%} >= 64:
+                    give 1 magma cream named "&cx64 Token" with lore "&7&o(Right click to redeem)" to player
+                    remove 64 from {Tokens::%player%}
+            else:
+                send "&c/withdraw (5/20/32/64)"
+        else:
+            send "&c/withdraw (5/20/32/64)"
+ 
+ 
+on leftclick on black shulker box:
+    if {crate.%location of block%} is set:
+        if player is sneaking:
+            if player has permission "rank.admin":
+                delete {crate.%location of block%}
+                send "&7[&c&lMs&7] &7You have deleted a Crate!"
+            else:  
+                cancel event
+                open chest with 3 rows named "&c&lCrates" to player
+                wait 1 tick
+                format slot 3 of player with magma cream named "&c10x Tokens" with lore "&720 Percent Chance" to be unstealable
+                format slot 4 of player with paper named "&a$2,000" with lore "&720 Percent Chance" to be unstealable
+                format slot 5 of player with 2 magma cream named "&c25x Tokens" with lore "&715 Percent Chance" to be unstealable
+                format slot 12 of player with paper named "&a$5,000" with lore "&715 Percent Chance" to be unstealable
+                format slot 13 of player with 3 magma cream named "&c50x Tokens" with lore "&78 Percent Chance" to be unstealable
+                format slot 14 of player with paper named "&a$25,000" with lore "&78 Percent Chance" to be unstealable
+                format slot 18 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+                format slot 21 of player with 4 magma cream named "&c100x Tokens" with lore "&76 Percent Chance" to be unstealable
+                format slot 22 of player with paper named "&a$100,000" with lore "&76 Percent Chance" to be unstealable
+                format slot 23 of player with glowing chest named "&aCosmic Crate" with lore "&71 Percent Chance" to be unstealable
+                format slot 26 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+        else:
+            cancel event
+            open chest with 3 rows named "&c&lCrates" to player
+            wait 1 tick
+            format slot 3 of player with magma cream named "&c10x Tokens" with lore "&720 Percent Chance" to be unstealable
+            format slot 4 of player with paper named "&a$2,000" with lore "&720 Percent Chance" to be unstealable
+            format slot 5 of player with 2 magma cream named "&c25x Tokens" with lore "&715 Percent Chance" to be unstealable
+            format slot 12 of player with paper named "&a$5,000" with lore "&715 Percent Chance" to be unstealable
+            format slot 13 of player with 3 magma cream named "&c50x Tokens" with lore "&78 Percent Chance" to be unstealable
+            format slot 14 of player with paper named "&a$10,000" with lore "&78 Percent Chance" to be unstealable
+            format slot 18 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+            format slot 21 of player with 4 magma cream named "&c100x Tokens" with lore "&76 Percent Chance" to be unstealable
+            format slot 22 of player with paper named "&a$100,000" with lore "&76 Percent Chance" to be unstealable
+            format slot 23 of player with glowing chest named "&aCosmic Crate" with lore "&71 Percent Chance" to be unstealable
+            format slot 26 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+ 
+on leftclick on red shulker box:
+    if {crate2.%location of block%} is set:
+        if player is sneaking:
+            if player has permission "rank.admin":
+                delete {crate2.%location of block%}
+                send "&7[&c&lMs&7] &7You have deleted a Crate!"
+            else:  
+                cancel event
+                open chest with 3 rows named "&c&lCrates" to player
+                wait 1 tick
+                format slot 3 of player with magma cream named "&c50x Tokens" with lore "&720 Percent Chance" to be unstealable
+                format slot 4 of player with paper named "&a$5,000" with lore "&720 Percent Chance" to be unstealable
+                format slot 5 of player with 2 magma cream named "&c75x Tokens" with lore "&715 Percent Chance" to be unstealable
+                format slot 12 of player with paper named "&a$10,000" with lore "&715 Percent Chance" to be unstealable
+                format slot 13 of player with 3 magma cream named "&c100x Tokens" with lore "&78 Percent Chance" to be unstealable
+                format slot 14 of player with paper named "&a$50,000" with lore "&78 Percent Chance" to be unstealable
+                format slot 18 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+                format slot 21 of player with 4 magma cream named "&c250x Tokens" with lore "&76 Percent Chance" to be unstealable
+                format slot 22 of player with paper named "&a$1,000,000" with lore "&76 Percent Chance" to be unstealable
+                format slot 23 of player with glowing chest named "&2Cosmic Crate" with lore "&71 Percent Chance" to be unstealable
+                format slot 26 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+        else:
+            cancel event
+            open chest with 3 rows named "&c&lCrates" to player
+            wait 1 tick
+            format slot 3 of player with magma cream named "&c50x Tokens" with lore "&720 Percent Chance" to be unstealable
+            format slot 4 of player with paper named "&a$5,000" with lore "&720 Percent Chance" to be unstealable
+            format slot 5 of player with 2 magma cream named "&c75x Tokens" with lore "&715 Percent Chance" to be unstealable
+            format slot 12 of player with paper named "&a$10,000" with lore "&715 Percent Chance" to be unstealable
+            format slot 13 of player with 3 magma cream named "&c100x Tokens" with lore "&78 Percent Chance" to be unstealable
+            format slot 14 of player with paper named "&a$50,000" with lore "&78 Percent Chance" to be unstealable
+            format slot 18 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+            format slot 21 of player with 4 magma cream named "&c250x Tokens" with lore "&76 Percent Chance" to be unstealable
+            format slot 22 of player with paper named "&a$1,000,000" with lore "&76 Percent Chance" to be unstealable
+            format slot 23 of player with glowing chest named "&2Cosmic Crate" with lore "&71 Percent Chance" to be unstealable
+            format slot 26 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+ 
+on leftclick on orange shulker box:
+    if {crate3.%location of block%} is set:
+        if player is sneaking:
+            if player has permission "rank.admin":
+                delete {crate3.%location of block%}
+                send "&7[&c&lMs&7] &7You have deleted a Crate!"
+            else:  
+                cancel event
+                open chest with 3 rows named "&c&lCrates" to player
+                wait 1 tick
+                format slot 3 of player with magma cream named "&c100x Tokens" with lore "&720 Percent Chance" to be unstealable
+                format slot 4 of player with paper named "&a$10,000" with lore "&720 Percent Chance" to be unstealable
+                format slot 5 of player with 2 magma cream named "&c145x Tokens" with lore "&715 Percent Chance" to be unstealable
+                format slot 12 of player with paper named "&a$25,000" with lore "&715 Percent Chance" to be unstealable
+                format slot 13 of player with 3 magma cream named "&c200x Tokens" with lore "&78 Percent Chance" to be unstealable
+                format slot 14 of player with paper named "&a$75,000" with lore "&78 Percent Chance" to be unstealable
+                format slot 18 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+                format slot 21 of player with 4 magma cream named "&c325x Tokens" with lore "&76 Percent Chance" to be unstealable
+                format slot 22 of player with paper named "&a$3,000,000" with lore "&76 Percent Chance" to be unstealable
+                format slot 23 of player with glowing chest named "&2Cosmic Crate" with lore "&71 Percent Chance" to be unstealable
+                format slot 26 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+        else:
+            cancel event
+            open chest with 3 rows named "&c&lCrates" to player
+            wait 1 tick
+            format slot 3 of player with magma cream named "&c100x Tokens" with lore "&720 Percent Chance" to be unstealable
+            format slot 4 of player with paper named "&a$10,000" with lore "&720 Percent Chance" to be unstealable
+            format slot 5 of player with 2 magma cream named "&c145x Tokens" with lore "&715 Percent Chance" to be unstealable
+            format slot 12 of player with paper named "&a$25,000" with lore "&715 Percent Chance" to be unstealable
+            format slot 13 of player with 3 magma cream named "&c200x Tokens" with lore "&78 Percent Chance" to be unstealable
+            format slot 14 of player with paper named "&a$75,000" with lore "&78 Percent Chance" to be unstealable
+            format slot 18 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+            format slot 21 of player with 4 magma cream named "&c325x Tokens" with lore "&76 Percent Chance" to be unstealable
+            format slot 22 of player with paper named "&a$3,000,000" with lore "&76 Percent Chance" to be unstealable
+            format slot 23 of player with glowing chest named "&2Cosmic Crate" with lore "&71 Percent Chance" to be unstealable
+            format slot 26 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+ 
+on break of black shulker box:
+    if player has permission "rank.admin":
+        if {crate.%location of block%} is set:
+            if player's gamemode is creative:
+                if player is sneaking:
+                    delete {crate.%location of block%}
+                    send "&7[&c&lMs&7] &7You have deleted a Crate!"
+                else:
+                    cancel event   
+                    open chest with 3 rows named "&2&l&k|| &7&lCrates &2&l&k||" to player
+                    wait 1 tick
+                    format slot 3 of player with magma cream named "&c10x Tokens" with lore "&720 Percent Chance" to be unstealable
+                    format slot 4 of player with paper named "&3$2,000" with lore "&720 Percent Chance" to be unstealable
+                    format slot 5 of player with 2 magma cream named "&c10x Tokens" with lore "&715 Percent Chance" to be unstealable
+                    format slot 12 of player with paper named "&3$5,000" with lore "&715 Percent Chance" to be unstealable
+                    format slot 13 of player with 3 magma cream named "&c10x Tokens" with lore "&78 Percent Chance" to be unstealable
+                    format slot 14 of player with paper named "&3$10,000" with lore "&78 Percent Chance" to be unstealable
+                    format slot 18 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+                    format slot 21 of player with 4 magma cream named "&c10x Tokens" with lore "&76 Percent Chance" to be unstealable
+                    format slot 22 of player with paper named "&3$100,000" with lore "&76 Percent Chance" to be unstealable
+                    format slot 23 of player with glowing chest named "&aCosmic Crate" with lore "&71 Percent Chance" to be unstealable
+                    format slot 26 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+ 
+on break of red shulker box:
+    if player has permission "rank.admin":
+        if {crate2.%location of block%} is set:
+            if player's gamemode is creative:
+                if player is sneaking:
+                    delete {crate.%location of block%}
+                    send "&7[&c&lMs&7] &7You have deleted a Crate!"
+                else:
+                    cancel event   
+                    open chest with 3 rows named "&2&l&k|| &4&lCrates &2&l&k||" to player
+                    wait 1 tick
+                    format slot 3 of player with magma cream named "&c50x Tokens" with lore "&720 Percent Chance" to be unstealable
+                    format slot 4 of player with paper named "&3$5,000" with lore "&720 Percent Chance" to be unstealable
+                    format slot 5 of player with 2 magma cream named "&c75x Tokens" with lore "&715 Percent Chance" to be unstealable
+                    format slot 12 of player with paper named "&3$10,000" with lore "&715 Percent Chance" to be unstealable
+                    format slot 13 of player with 3 magma cream named "&c100x Tokens" with lore "&78 Percent Chance" to be unstealable
+                    format slot 14 of player with paper named "&3$50,000" with lore "&78 Percent Chance" to be unstealable
+                    format slot 18 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+                    format slot 21 of player with 4 magma cream named "&c250x Tokens" with lore "&76 Percent Chance" to be unstealable
+                    format slot 22 of player with paper named "&3$1,000,000" with lore "&76 Percent Chance" to be unstealable
+                    format slot 23 of player with glowing chest named "&2Cosmic Crate" with lore "&71 Percent Chance" to be unstealable
+                    format slot 26 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+ 
+on break of orange shulker box:
+    if player has permission "rank.admin":
+        if {crate3.%location of block%} is set:
+            if player's gamemode is creative:
+                if player is sneaking:
+                    delete {crate3.%location of block%}
+                    send "&7[&c&lMs&7] &7You have deleted a Crate!"
+                else:
+                    cancel event
+                    open chest with 3 rows named "&c&lCrates" to player
+                    wait 1 tick
+                    format slot 3 of player with magma cream named "&c100x Tokens" with lore "&720 Percent Chance" to be unstealable
+                    format slot 4 of player with paper named "&a$10,000" with lore "&720 Percent Chance" to be unstealable
+                    format slot 5 of player with 2 magma cream named "&c145x Tokens" with lore "&715 Percent Chance" to be unstealable
+                    format slot 12 of player with paper named "&a$25,000" with lore "&715 Percent Chance" to be unstealable
+                    format slot 13 of player with 3 magma cream named "&c200x Tokens" with lore "&78 Percent Chance" to be unstealable
+                    format slot 14 of player with paper named "&a$75,000" with lore "&78 Percent Chance" to be unstealable
+                    format slot 18 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+                    format slot 21 of player with 4 magma cream named "&c325x Tokens" with lore "&76 Percent Chance" to be unstealable
+                    format slot 22 of player with paper named "&a$3,000,000" with lore "&76 Percent Chance" to be unstealable
+                    format slot 23 of player with glowing chest named "&2Cosmic Crate" with lore "&71 Percent Chance" to be unstealable
+                    format slot 26 of player with chest named "&c&l&nStore" with lore "&7" and "&7&oMultiplesMC.buycraft.net" and "" to be unstealable
+ 
+on place:
+    if player has permission "rank.admin":
+        if lore of player's tool is "&7( | &cCrate Chest &7| )":
+            set {crate.%location of block%} to true
+            send "&7[&c&lMs&7] You have placed a Crate!"
+            show mob spawner flames at event-block
+ 
+on place:
+    if player has permission "rank.admin":
+        if lore of player's tool is "&7( | &4Crate Chest &7| )":
+            set {crate2.%location of block%} to true
+            send "&7[&c&lMs&7] You have placed a Crate!"
+            show mob spawner flames at event-block
+ 
+on place:
+    if player has permission "rank.admin":
+        if lore of player's tool is "&7( | &6Crate Chest &7| )":
+            set {crate3.%location of block%} to true
+            send "&7[&c&lMs&7] You have placed a Crate!"
+            show mob spawner flames at event-block
+ 
+command /ccrate [<text>]:
+    trigger:
+        if player has permission "rank.admin":
+            if arg-1 is not set:
+                send "&7[&c&lM&7] &7/crate (Get/Key/Help/Keyall)"
+            if arg-1 is set:
+                if arg-1 is "get":
+                    give player 1 black shulker box named "&cCrate" with lore "&7( | &cCrate Chest &7| )"
+                    give player 1 red shulker box named "&4Crate" with lore "&7( | &4Crate Chest &7| )"
+                    give player 1 orange shulker box named "&6Crate" with lore "&7( | &6Crate Chest &7| )"
+                    send "&7[&c&lMs&7] &7You have gotten a &cCrate&7!"
+                if arg-1 is "key":
+                    give 1 prismarine shard named "&7&l(&c&l!&7&l) &7&nCrate Key" to player
+                    give 1 prismarine shard named "&7&l(&c&l!&7&l) &4&nCrate Key" to player
+                    give 1 prismarine shard named "&7&l(&c&l!&7&l) &6&nCrate Key" to player
+                    send "&7[&c&lMs&7] &7You have been given a &cCrate Key&7!"
+                if arg-1 is "help":
+                    send "&7[&c&lM&7] &7/ccrate (Get/Key/Help)"
+                    send " "
+                    send "&7[&c&lM&7] &7Skripted Crates"
+                    send "&7[&c&lM&7] &c&oV1.0"
+                if arg-1 is "keyall":
+                    loop all players:
+                        give 1 prismarine shard named "&7&l(&c&l!&7&l) &cCrate Key" to loop-player
+                        send "&7&l* &cGiven 1x Crate key" to loop-player
+                        stop
+        else:
+            if arg-1 is not set:
+                send "&7[&c&lM&7] &Multiples Crates"
+                send "&7[&c&lM&7] &c&oV1.0"
+            if arg-1 is "help":
+                send "&7[&c&lM&7] &7Multiples Crates"
+                send "&7[&c&lM&7] &c&oV1.0"
+ 
+ 
+command /system:lcrate [<player>] [<integer>]:
+    permission: rank.admin
+    permission message: No Permission
+    trigger:
+        if arg-1 is set:
+            if arg-2 is set:
+                if arg-2 is 1:
+                    give arg-1 chest named "&7&l(&c&l!&7&l) &a&n&lCosmic Crate&7 &7&o(Right-Click)" with lore "" and "&2&l&k|| &aTier I &7Cosmic crate &2&l&k||" and "" and "&c● &c&ox5 &7&l(&c&l!&7&l) &4&nCrate Key"  and "&7● &c$&o50,000 - 100,000" and "&7● &c&o250 - 500 &ctokens" and ""
+                    send "{@p} &7Recieved &ax1 Cosmic Crate" to arg-1
+                if arg-2 is 2:
+                    give arg-1 chest named "&7&l(&c&l!&7&l) &2&n&lCosmic Crate&7 &7&o(Right-Click)" with lore "" and "&2&l&k|| &2Tier II &7Cosmic crate &2&l&k||" and "" and "&c● &c&ox10 &7&l(&c&l!&7&l) &4&nCrate Key" and "&c● &c&ox5 &7&l(&c&l!&7&l) &6&nCrate Key" and "&7● &c$&o120,000 - 300,000" and "&7● &c&o250 - 500 &ctokens" and ""
+                    send "{@p} &7Recieved &2x1 Cosmic Crate" to arg-1
+            else:
+                send "{@p} &c/lcrate (player) (1/2)" to player
+        else:
+            send "{@p} &c/lcrate (player) (1/2)" to player
+ 
+on place of chest:
+    if name of player's tool is "&7&l(&c&l!&7&l) &a&n&lCosmic Crate&7 &7&o(Right-Click)":
+        cancel event
+        remove 1 of player's held item from player's inventory
+        show mob spawner flames at event-block
+        send ""
+        send "{@p} &7Opened &aCosmic Crate"
+        send ""
+        broadcast "&2&l&k|| &c%player% &7has opened a &aTier I &7Loot crate &2&l&k||"
+        give 5 prismarine shard named "&7&l(&c&l!&7&l) &4&nCrate Key" to player
+        send "{@p} &aYou won 5x &7&l(&c&l!&7&l) &4&nCrate Key"
+        set {_amtbal} to random integer between 50000 and 100000
+        add {_amtbal} to player's balance
+        send "{@p} &aYou won $&a%{_amtbal}%"
+        set {_amtt} to a random integer between 250 and 500
+        add {_amtt} to {Tokens::%player%}
+        send "{@p} &aYou won &a%{_amtt}% &atokens"
+    else if name of player's tool is "&7&l(&c&l!&7&l) &2&n&lCosmic Crate&7 &7&o(Right-Click)":
+        cancel event
+        remove 1 of player's held item from player's inventory
+        show mob spawner flames at event-block
+        send ""
+        send "{@p} &7Opened &aCosmic Crate"
+        send ""
+        broadcast "&2&l&k|| &c%player% &7has opened a &aCosmic Crate &2&l&k||"
+        give 10 prismarine shard named "&7&l(&c&l!&7&l) &4&nCrate Key" to player
+        send "{@p} &aYou won 10x &7&l(&c&l!&7&l) &4&nCrate Key"
+        give 5 prismarine shard named "&7&l(&c&l!&7&l) &6&nCrate Key" to player
+        send "{@p} &aYou won 5x &7&l(&c&l!&7&l) &6&nCrate Key"
+        set {_amtbal} to random integer between 120000 and 300000
+        add {_amtbal} to player's balance
+        send "{@p} &aYou won $&a%{_amtbal}%"
+        set {_amtt} to a random integer between 250 and 500
+        add {_amtt} to {Tokens::%player%}
+        send "{@p} &aYou won &a%{_amtt}% &atokens"

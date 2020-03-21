@@ -1,0 +1,126 @@
+
+command /sell:
+    trigger:
+        loop all items in the inventory of player:
+            if loop-item is cobblestone:
+                set {amount} to amount of cobblestone in player's inventory
+                set {money} to {amount} * 3
+                remove all cobblestone from player's inventory
+                send "&7&l* &aYou sold %{amount}% Cobblestone for $%{money}%!"
+                add {money} to player's balance
+            if loop-item is cactus:
+                set {amount} to amount of cactus in player's inventory
+                set {money} to {amount} * 6
+                remove all cactus from player's inventory
+                send "&7&l* &aYou sold %{amount}% Cactus for $%{money}%!"
+                add {money} to player's balance
+            if loop-item is redstone:
+                set {amount} to amount of redstone in player's inventory
+                set {money} to {amount} * 22
+                remove all redstone from player's inventory
+                send "&7&l* &aYou sold %{amount}% Redstone for $%{money}%!" 
+                add {money} to player's balance
+            if loop-item is iron ingot:
+                set {amount} to amount of iron ingot in player's inventory
+                set {money} to {amount} * 15
+                remove all iron ingot from player's inventory
+                send "&7&l* &aYou sold %{amount}% Iron for $%{money}%!" 
+                add {money} to player's balance
+            if loop-item is gold ingot:
+                set {amount} to amount of gold ingot in player's inventory
+                set {money} to {amount} * 18
+                remove all gold ingot from player's inventory
+                send "&7&l* &aYou sold %{amount}% Gold for $%{money}%!" 
+                add {money} to player's balance
+            if loop-item is coal:
+                set {amount} to amount of coal in player's inventory
+                set {money} to {amount} * 5
+                remove all coal from player's inventory
+                send "&7&l* &aYou sold %{amount}% Coal for $%{money}%!" 
+                add {money} to player's balance
+            if loop-item is cactus:
+                set {amount} to amount of cactus in player's inventory
+                set {money} to {amount} * 10
+                remove all cactus from player's inventory
+                send "&7&l* &aYou sold %{amount}% Ink Sack(s) for $%{money}%!" 
+                add {money} to player's balance
+            if loop-item is diamond:
+                set {amount} to amount of diamond in player's inventory
+                set {money} to {amount} * 32
+                remove all diamond from player's inventory
+                send "&7&l* &aYou sold %{amount}% Diamond(s) for $%{money}%!" 
+                add {money} to player's balance
+            if loop-item is sugar cane:
+                set {amount} to amount of sugar cane in player's inventory
+                set {money} to {amount} * 7
+                remove all sugar cane from player's inventory
+                send "&7&l* &aYou sold %{amount}% Sugar for $%{money}%!" 
+                add {money} to player's balance
+            if loop-item is wheat:
+                set {amount} to amount of wheat in player's inventory
+                set {money} to {amount} * 3
+                remove all wheat from player's inventory
+                send "&7&l* &aYou sold %{amount}% Wheat for $%{money}%!"
+                add {money} to player's balance
+            if loop-item is lapis lazuli:
+                set {amount} to amount of lapis lazuli in player's inventory
+                set {money} to {amount} * 20
+                remove all lapis lazuli from player's inventory
+                send "&7&l* &aYou sold %{amount}% Lapis for $%{money}%!" 
+                add {money} to player's balance
+            if loop-item is nether wart:
+                set {amount} to amount of nether wart in player's inventory
+                set {money} to {amount} * 9
+                remove all nether wart from player's inventory
+                send "&7&l* &aYou sold %{amount}% Nether wart for $%{money}%!" 
+                add {money} to player's balance
+            if loop-item is blaze rod:
+                set {amount} to amount of blaze rod in player's inventory
+                set {money} to {amount} * 20
+                remove all blaze rod from player's inventory
+                send "&7&l* &aYou sold %{amount}% Blaze Rod(s) for $%{money}%!" 
+                add {money} to player's balance
+            if loop-item is spider eye:
+                set {amount} to amount of spider eye in player's inventory
+                set {money} to {amount} * 16
+                remove all spider eye from player's inventory
+                send "&7&l* &aYou sold %{amount}% Spider eye(s) for $%{money}%!" 
+                add {money} to player's balance
+            if loop-item is bone:
+                set {amount} to amount of bone in player's inventory
+                set {money} to {amount} * 18
+                remove all bone from player's inventory
+                send "&7&l* &aYou sold %{amount}% Bone(s) for $%{money}%!"
+                add {money} to player's balance
+            if loop-item is gunpowder:
+                set {amount} to amount of gunpowder in player's inventory
+                set {money} to {amount} * 26
+                remove all gunpowder from player's inventory
+                send "&7&l* &aYou sold %{amount}% Gunpowder for $%{money}%!"
+                add {money} to player's balance
+            if loop-item is rotten flesh:
+                set {amount} to amount of rotten flesh in player's inventory
+                set {money} to {amount} * 13
+                remove all rotten flesh from player's inventory
+                send "&7&l* &aYou sold %{amount}% Rotten Flesh for $%{money}%!"
+                add {money} to player's balance
+            if loop-item is beef:
+                set {amount} to amount of beef in player's inventory
+                set {money} to {amount} * 7
+                remove all beef from player's inventory
+                send "&7&l* &aYou sold %{amount}% Beef for $%{money}%!"
+                add {money} to player's balance
+            if loop-item is raw porkchop:
+                set {amount} to amount of beef in player's inventory
+                set {money} to {amount} * 3
+                remove all beef from player's inventory
+                send "&7&l* &aYou sold %{amount}% Raw Porkchop(s) for $%{money}%!"
+                add {money} to player's balance
+            if loop-item is raw beef:
+                set {amount} to amount of beef in player's inventory
+                set {money} to {amount} * 4
+                remove all beef from player's inventory
+                send "&7&l* &aYou sold %{amount}% Beef for $%{money}%!"
+                add {money} to player's balance
+				
+				

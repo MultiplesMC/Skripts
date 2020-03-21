@@ -1,0 +1,48 @@
+options:
+    logo: &c&lMultiples
+    season: &b&k!i &c&lSeason 3 &b&k!i 
+
+
+function scoreboard(p: player, i: integer):
+    if {_i} is 0:
+        wipe {_p}'s sidebar
+        set name of sidebar of {_p} to "{@logo}"
+        set {_lines} to 11
+        set score "&0" in sidebar of {_p} to {_lines}
+        remove 1 from {_lines}
+        set score "&4&o✦ &c%{_p}%" in sidebar of {_p} to {_lines}
+        remove 1 from {_lines}
+        set score "&1" in sidebar of {_p} to {_lines}
+        remove 1 from {_lines}
+        set score "&4&o✦ &cLevel: &7%{Level::%{_p}%}%" in sidebar of {_p} to {_lines}
+        remove 1 from {_lines}
+        set score "&4&o✦ &cEXP: &7%{Xp::%{_p}%}%&c/&7100" in sidebar of {_p} to {_lines}
+        remove 1 from {_lines}
+        set score "&2" in sidebar of {_p} to {_lines}
+        remove 1 from {_lines}
+        set score "&4&o✦ &cTokens: &7%{Tokens::%{_p}%}%" in sidebar of {_p} to {_lines}
+        remove 1 from {_lines}
+        set score "&4&o✦ &cBalance: &7%{_p}'s balance%" in sidebar of {_p} to {_lines}
+        remove 1 from {_lines}
+        set score "&3" in sidebar of {_p} to {_lines}
+        remove 1 from {_lines}
+        set score "     {@season}" in sidebar of {_p} to {_lines}
+        remove 1 from {_lines}
+        set score "&4" in sidebar of {_p} to {_lines}
+
+
+
+every 10 seconds in world "ul_S31":
+    loop all players:
+        scoreboard(loop-player, 0)
+
+
+
+on load:
+    loop all players:
+        scoreboard(loop-player, 0)
+
+
+
+on join:
+    scoreboard(player, 0)
