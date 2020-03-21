@@ -3,50 +3,45 @@ on load:
   set {hackwords::*} to "hacking", "hax", "hacks", and "hack"
 
 on chat:
-  cancel event
   if {mute.%player%} is true:
-    stop
+    cancel event
   if {staffchat.%uuid of player%} is true:
-    stop
+    cancel event
   if {verified.%uuid of player%} is false:
+    cancel event
     kick player due to "&cYou were not verified when you tried to talk, join again"
-    stop
   if {chat} is false:
     if player does not have permission "rank.jrmod":
-      stop
+      cancel event
+      send "&c"
   if {muted::*} contains player:
-    stop
+    cancel event
   if {hackwords::*} contains message:
     play sound "ENTITY_VILLAGER_NO" to player  
     send "&cHey! Use /report or contact a staff memeber on discord!"
     stop
-  if {rank.%UUID of player%} is "Admin":
-    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &c%player%&8: &f%message%"
-    stop
-  if {rank.%UUID of player%} is "Dev":
-    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &c%player%&8: &f%message%"
-    stop
-  if {rank.%UUID of player%} is "SrMod":
-    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &6%player%&8: &f%message%"
-    stop
-  if {rank.%UUID of player%} is "Mod":
-    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &5%player%&8: &f%message%"
-    stop
-  if {rank.%UUID of player%} is "VIP":
-    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &a%player%&8: &f%message%"
-    stop
-  if {rank.%UUID of player%} is "MVP":
-    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7]  %{display.rank.%UUID of player%}% &b%player%&8: &f%message%"
-    stop
-  if {rank.%UUID of player%} is "MVP+":
-    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &6%player%&8: &f%message%"
-    stop
-  if {rank.%UUID of player%} is "MH":
-    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &d%player%&8: &f%message%"
-    stop
+  if {clans::%player%} is set:
+    set {_clan} to "&d• %{clans::%player%}% •"  
   else:
-    broadcast "&7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] &7%player%&8: &f%message%"
-    stop
+    set {_clan} to ""
+  if {rank.%UUID of player%} is "Admin":
+    set chat format to "%{_clan}% &7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &c%player%&8: &f%message%"
+  if {rank.%UUID of player%} is "Dev":
+    set chat format to "%{_clan}% &7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &c%player%&8: &f%message%"
+  if {rank.%UUID of player%} is "SrMod":
+    set chat format to "%{_clan}% &7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &6%player%&8: &f%message%"
+  if {rank.%UUID of player%} is "Mod":
+    set chat format to "%{_clan}% &7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &5%player%&8: &f%message%"
+  if {rank.%UUID of player%} is "VIP":
+    set chat format to "%{_clan}% &7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &a%player%&8: &f%message%"
+  if {rank.%UUID of player%} is "MVP":
+    set chat format to "%{_clan}% &7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7]  %{display.rank.%UUID of player%}% &b%player%&8: &f%message%"
+  if {rank.%UUID of player%} is "MVP+":
+    set chat format to "%{_clan}% &7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &6%player%&8: &f%message%"
+  if {rank.%UUID of player%} is "MH":
+    set chat format to "%{_clan}% &7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &d%player%&8: &f%message%"
+  else:
+    set chat format to "%{_clan}% &7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] &7%player%&8: &f%message%"
 
 command /setupall:
   permission: op

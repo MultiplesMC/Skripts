@@ -198,10 +198,10 @@ command /clan [<text>] [<text>]:
 					else:
 						if {clanchat::%player%} is not set:
 							set {clanchat::%player%} to true
-							send "{@prefix} {@color}Enabled clan chat...%nl%Type this command again to disable it!"
+							send "{@prefix} {@color}Enabled clan chat...%nl%{@color}Type this command again to disable it!"
 						else:
 							delete {clanchat::%player%}
-							send "{@prefix} {@color}Disabled clan chat...%nl%Type this command again to enable it!"
+							send "{@prefix} {@color}Disabled clan chat...%nl%{@color}Type this command again to enable it!"
 				if arg-1 is "kick":
 					if {clans::%player%} is not set:
 						send "{@prefix} {@color}You're not in a clan!"
@@ -317,42 +317,44 @@ on damage:
 			stop
  
 on chat:
-	cancel event
 	if {clanchat::%player%} is true:
-		loop {members::%{clans::%{clans::%player%}%::owner}%::*}:
-			send "&3&lCLAN &3%player% &b» &3%message%" to loop-value
-			stop
+		cancel event
+		set {_members::*} to {members::%{clans::%{clans::%player%}%::owner}%::*}
+		send "&3&lCLAN &7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &3%player% &b» &3%message%" to all players where [{_members::*} contains input]
+		# loop {members::%{clans::%{clans::%player%}%::owner}%::*}:
+		# 	send "&3&lCLAN &3%player% &b» &3%message%" to loop-value
+		# 	stop
    
-	else if {clanchat::%player%} is not set:
-		if {clans::%player%} is set:
-			if {mutechat} is true:
-				if player has permission "staff.mc.bypass":
-					broadcast "&d• %{clans::%player%}% • &f%player's prefix%{@color}%player% %player's suffix%&8» {@color}%message%"
-					stop
-				else:
-					cancel event
-					send "&dClanned &8» &7The chat is currently muted!"
-			else if {mutechat} or {staffchat.%player%} is not set:
-				broadcast "&d• %{clans::%player%}% • &f%player's prefix%{@color}%player% %player's suffix%&8» {@color}%message%"
-				stop
-			if {staffchat.%player%} is true:
-				loop all players:
-					if loop-player has permission "staff.sc":
-						cancel event
-						send "&5STAFF CHAT &8» &7%player%: %message%" to loop-player
-		else:
-			if {mutechat} is true:
-				if player has permission "staff.mc.bypass":
-					broadcast "&f%player's prefix%{@color}%player% %player's suffix%&8» {@color}%message%"
-					stop
-				else:
-					cancel event
-					send "&dClanned &8» &7The chat is currently muted!"
-			else if {mutechat} or {staffchat.%player%} is not set:
-				broadcast "&f%player's prefix%{@color}%player% %player's suffix%&8» {@color}%message%"
-				stop
-			if {staffchat.%player%} is true:
-				loop all players:
-					if loop-player has permission "staff.sc":
-						cancel event
-						send "&5STAFF CHAT &8» &7%player%: %message%" to loop-player
+# 	else if {clanchat::%player%} is not set:
+# 		if {clans::%player%} is set:
+# 			if {mutechat} is true:
+# 				if player has permission "staff.mc.bypass":
+# 					broadcast "&d• %{clans::%player%}% • &f%player's prefix%{@color}%player% %player's suffix%&8» {@color}%message%"
+# 					stop
+# 				else:
+# 					cancel event
+# 					send "&dClanned &8» &7The chat is currently muted!"
+# 			else if {mutechat} or {staffchat.%player%} is not set:
+# 				broadcast "&d• %{clans::%player%}% • &f%player's prefix%{@color}%player% %player's suffix%&8» {@color}%message%"
+# 				stop
+# 			if {staffchat.%player%} is true:
+# 				loop all players:
+# 					if loop-player has permission "staff.sc":
+# 						cancel event
+# 						send "&5STAFF CHAT &8» &7%player%: %message%" to loop-player
+# 		else:
+# 			if {mutechat} is true:
+# 				if player has permission "staff.mc.bypass":
+# 					broadcast "&f%player's prefix%{@color}%player% %player's suffix%&8» {@color}%message%"
+# 					stop
+# 				else:
+# 					cancel event
+# 					send "&dClanned &8» &7The chat is currently muted!"
+# 			else if {mutechat} or {staffchat.%player%} is not set:
+# 				broadcast "&f%player's prefix%{@color}%player% %player's suffix%&8» {@color}%message%"
+# 				stop
+# 			if {staffchat.%player%} is true:
+# 				loop all players:
+# 					if loop-player has permission "staff.sc":
+# 						cancel event
+# 						send "&5STAFF CHAT &8» &7%player%: %message%" to loop-player
