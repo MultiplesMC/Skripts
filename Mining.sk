@@ -385,7 +385,7 @@ on mine:
 							if {Quests.gold::%player%} is 350:
 								set {Quests.6::%player%} to true
 								message "{@p} &aYou have completed a quest! Do &b/quests &ato view quests!"
-								delete {Quests.gold::%plgolayer%}
+								delete {Quests.gold::%player%}
 								checkQuests(player)
 								add 215 to {Tokens::%player%}
 
