@@ -22,6 +22,8 @@ on chat:
     play sound "ENTITY_VILLAGER_NO" to player  
     send "&cHey! Use /report or contact a staff memeber on discord!"
     stop
+  if {clanchat::%player%} is true:
+    stop
   if {clans::%player%} is set:
     set {_clan} to "&d• %{clans::%player%}% •"  
   else:

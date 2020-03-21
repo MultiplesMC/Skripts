@@ -32,20 +32,24 @@ command /clan [<text>] [<text>]:
 							stop
 						if arg 2 matches "[a-zA-Z]+":
 							if {clans::%player%} is not set:
-								loop {clans::*}:
-									if loop-value is argument 2:
-										set {_n} to true
-								if {_n} is not set:
-									set {clans::%player%} to arg-2
-									set {clans::%{clans::%player%}%::owner} to the player
-									add player to {members::%player%::*}
-									add {clans::%player%} to {cells::*}
-									execute console command "mv clone cell_template_S3 zcell_%{clans::%player%}%"
-									send "{@prefix} &d%player% {@color}has created a clan named &d%arg-2%{@color}!"
+								if {Level::%player%} >= 10:
+									loop {clans::*}:
+										if loop-value is argument 2:
+											set {_n} to true
+									if {_n} is not set:
+										set {clans::%player%} to arg-2
+										set {clans::%{clans::%player%}%::owner} to the player
+										add player to {members::%player%::*}
+										add {clans::%player%} to {cells::*}
+										execute console command "mv clone cell_template_S3 zcell_%{clans::%player%}%"
+										send "{@prefix} &d%player% {@color}has created a clan named &d%arg-2%{@color}!"
+									else:
+										send "{@prefix} {@color}A clan with that name already exists!"
 								else:
-									send "{@prefix} {@color}A clan with that name already exists!"
+									send "{@prefix} {@color}You need to be level &c10 &7to create a clan!"
 							else:
 								send "{@prefix} {@color}You're already in a clan!"
+								
 						else:
 							send "{@prefix} {@color}Name must be &ealphabetical."
 							stop
@@ -320,7 +324,7 @@ on chat:
 	if {clanchat::%player%} is true:
 		cancel event
 		set {_members::*} to {members::%{clans::%{clans::%player%}%::owner}%::*}
-		send "&3&lCLAN &7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &3%player% &b» &3%message%" to all players where [{_members::*} contains input]
+		send "&2&lCLAN &7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &2%player%&8: &a%message%" to all players where [{_members::*} contains input]
 		# loop {members::%{clans::%{clans::%player%}%::owner}%::*}:
 		# 	send "&3&lCLAN &3%player% &b» &3%message%" to loop-value
 		# 	stop
