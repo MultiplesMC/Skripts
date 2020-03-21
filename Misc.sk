@@ -34,7 +34,7 @@ command /sc [<text>]:
 			set {staffchat.%player's uuid%} to not {staffchat.%player's uuid%}
 		else:
 			set {_staffmsg} to formatted arg-1
-			send "&c&l[S] &8&l- &7%executor%&f: &e%{_staffmsg}%" to all players where [input has permission "rank.jrmod"]
+			send "&4&l[STAFFCHAT] &c%player%&8: &e%{_staffmsg}%" to all players where [input has permission "rank.jrmod"]
 
 # command /report [<offline player>] [<text>]:
 # 	trigger:
@@ -73,7 +73,7 @@ on chat:
 	if {staffchat.%uuid of player%} is true:
 		cancel event
 		set {_staffmsg} to formatted message
-		send "&c&l[S] &8&l- &7%player%&f: &e%{_staffmsg}%" to all players where [input has permission "rank.jrmod"]
+		send "&4&l[STAFFCHAT] &c%player%&8: &e%{_staffmsg}%" to all players where [input has permission "rank.jrmod"]
 
 command /sick:
 	trigger:
