@@ -6,6 +6,7 @@ command /holoset [<text>]:
         else if arg-1 is "prestige":
             create new holo with line "&7» &c&lPrestige Leaderboard &7«" and store in {prestige_lbs::*}
             send "&aCreated a new hologram with id &c%size of {prestige_lbs::*}%"
+
         else if arg-1 is "level":
             create new holo with line "&7» &c&lLevel Leaderboard &7«" and store in {lvl_lbs::*}
             send "&aCreated a new hologram with id &c%size of {lvl_lbs::*}%"
@@ -20,6 +21,7 @@ command /holoremove [<text>] [<text>]:
         else if arg-1 is "prestige":
             delete hologram {prestige_lbs::%arg-2%}
             delete {prestige_lbs::%arg-2%}
+            # delete {plbs_loc::%arg-2%}
             send "&aDeleted hologram with ID &c%arg-2%"
         else if arg-1 is "level":
             delete hologram {lvl_lbs::%arg-2%}
