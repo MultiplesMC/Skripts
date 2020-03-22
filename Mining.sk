@@ -353,6 +353,7 @@ on mine:
 
 
 					if event-block is coal ore:
+						add 1 to {Quests.coal::%player%}
 						if {Quests.3::%player%} is false:
 							if {Quests.coal::%player%} is 150:
 								set {Quests.3::%player%} to true
@@ -371,6 +372,7 @@ on mine:
 
 
 					if event-block is iron ore:
+						add 1 to {Quests.iron::%player%}
 						if {Quests.5::%player%} is false:
 							if {Quests.iron::%player%} is 250:
 								set {Quests.5::%player%} to true
