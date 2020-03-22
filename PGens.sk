@@ -30,7 +30,8 @@ on place:
 
 on break:
 	set {_w} to {clans::%player%}
-	if player's world is not "zcell_%{_w}%":
+	if player's world is not "zcell_%player%":
+		player's world is not "ul_S31"
 		if player does not have permission "rank.srmod":
 			cancel event
 			message "{@prefix} &cYou can not break blocks in other clans' cells!"
@@ -51,6 +52,7 @@ on break:
 					set event-block to light blue terracotta
 					wait 15 seconds
 					set event-block to coal ore
+					show mob spawner flames at event-block
 			if event-block is iron ore:
 				if player is sneaking:
 					cancel drops
@@ -62,6 +64,7 @@ on break:
 					set event-block to light blue terracotta
 					wait 20 seconds
 					set event-block to iron ore
+					show mob spawner flames at event-block
 			if event-block is redstone ore:
 				if player is sneaking:
 					cancel drops
@@ -73,6 +76,7 @@ on break:
 					set event-block to light blue terracotta
 					wait 20 seconds
 					set event-block to redstone ore
+					show mob spawner flames at event-block
 			if event-block is lapis ore:
 				if player is sneaking:
 					cancel drops
@@ -84,6 +88,7 @@ on break:
 					set event-block to light blue terracotta
 					wait 15 seconds
 					set event-block to lapis ore
+					show mob spawner flames at event-block
 			if event-block is gold ore:
 				if player is sneaking:
 					cancel drops
@@ -95,6 +100,7 @@ on break:
 					set event-block to light blue terracotta
 					wait 25 seconds
 					set event-block to gold ore
+					show mob spawner flames at event-block
 			if event-block is diamond ore:
 				if player is sneaking:
 					cancel drops
@@ -106,6 +112,7 @@ on break:
 					set event-block to light blue terracotta
 					wait 15 seconds
 					set event-block to diamond ore
+					show mob spawner flames at event-block
 
 on quit:
 	if {clans::%player%} is set:
