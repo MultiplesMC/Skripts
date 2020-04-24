@@ -1,364 +1,370 @@
 options:
 	prefix: &cMultiples &7•
-	color: &7
- 
-command /clan [<text>] [<text>]:
-	aliases: clans, clancmd
+	maincolor: &c
+	othercolor: &7
+	titlename: CREW
+	name: crew
+
+function crewinfo(p: player, c: text):
+	set {_u} to uuid of {_p}
+	send "" to {_p}
+	send "{@maincolor}%{_c}% {@maincolor}Information" to {_p}
+	send "" to {_p}
+	send "{@othercolor}Leader: {@maincolor}%{crews::%{_c}%::leader}%" to {_p}
+	set {_m::*} to {members::%{crew::%{_u}%}%::*}
+	remove {crews::%{_c}%::leader} from {_m::*}
+	if size of {_m::*} > 0:
+		set {_members} to join {_m::*} with "{@maincolor}, "
+		send "{@othercolor}Members: %formatted {_members}%" to {_p}
+	send "" to {_p}
+	send "{@othercolor}Clan Balance: {@maincolor}%{crewbal::%{crew::%{_u}%}%}%" to {_p}
+	send "" to {_p}
+command /crew [<text>] [<text>]:
+	aliases: crews, crewcmd
 	trigger:
 		if arg-1 is not set:
 			send ""
-			send "&c&lMEMBER COMMANDS!"
-			send "&7• &c/clan create (name) {@color}&oCreates a clan."
-			send "&7• &c/clan join (name) {@color}&oAllows you to join clans."
-			send "&7• &c/clan leave {@color}&oAllows you to leave your clan."
-			send "&7• &c/clan chat {@color}&oToggles clan chat mode."
-			send "&7• &c/clan home {@color}&oTeleports players to your clan home."
-			send "&7• &c/clan balance {@color}&oShows the balance of your clans bank."
-			if player is {clans::%{clans::%player%}%::owner}:
-				send "&c&lLEADER COMMANDS!"
-				send "&7• &c/clan invite (player) {@color}&oInvites a player to your clan"
-				send "&7• &c/clan kick (player) {@color}&oKicks a player from your clan."
-				send "&7• &c/clan deposit (amount) {@color}&oDeposits money into your clan. (Only Leader Can Withdraw)"
-				send "&7• &c/clan withdraw (amount) {@color}&oWithdraw money from your clan bank. (Only Leader Can Withdraw)"
-				send "" 
+			send "{@maincolor}&l{@titlename} COMMANDS!"
+			send "{@maincolor}/{@name} create (name) {@othercolor}&oCreates a {@name}."
+			send "{@maincolor}/{@name} join (name) {@othercolor}&oAllows you to join {@name}s."
+			send "{@maincolor}/{@name} leave {@othercolor}&oAllows you to leave your {@name}."
+			send "{@maincolor}/{@name} chat {@othercolor}&oToggles {@name} chat mode."
+			send "{@maincolor}/{@name} home {@othercolor}&oTeleports players to your {@name} home."
+			send "{@maincolor}/{@name} balance {@othercolor}&oShows the balance of your {@name}s bank."
+			send "{@maincolor}/{@name} deposit (amount) {@othercolor}&oDeposits money into your {@name} bank."
+			send "{@maincolor}&l{@titlename} LEADER COMMANDS!"
+			send "{@maincolor}/{@name} invite (player) {@othercolor}&oInvites a player to your {@name}"
+			send "{@maincolor}/{@name} kick (player) {@othercolor}&oKicks a player from your {@name}."
+			send "{@maincolor}/{@name} disband {@othercolor}&oKicks a player from your {@name}."
+			send "{@maincolor}/{@name} withdraw (amount) {@othercolor}&oWithdraw money from your {@name} bank."
+			send ""
+		else if arg-1 is "create", "disband", "join", "leave", "chat", "invite", "kick", "info", "home", "withdraw", "deposit", "balance" or "bal":
+			
+			if arg-1 is "create":
+				if {crew::%uuid of player%} is set:
+					send "{@prefix} {@maincolor}You are already in a {@name}!"
+				if arg-2 is not set:
+					send "{@prefix} {@maincolor}/{@name} create (name)"
+				else if length of arg-2 is greater than 8:
+					send "{@prefix} {@maincolor}{@name} names can't be longer than 8 characters"
+				else if arg-2 does not match "[a-zA-Z]+":
+					send "{@prefix} {@maincolor}Names must be alphabetical"
+				else if {Level::%player%} < 10:
+					send "{@prefix} {@maincolor}You need to be level 10 to create a {@name}"
+				else if {crews::*} contains arg-2:
+					send "{@prefix} {@maincolor}A {@name} with this name already exists"
+				else:
+					set {crew::%uuid of player%} to arg-2
+					add arg-2 to {crews::*}
+					set {crews::%arg-2%::leader} to player
+					add player to {members::%arg-2%::*}
+					add arg-2 to {ccells::*}
+					set {crewbal::%arg-2%} to 0
+					# execute console command "mv clone ul_S31 zcell_%arg-2%"
+					execute console command "mv clone cell_template_S3 zcell_%arg-2%"
+					execute console command "mv modify set alias zcell_%arg-2% zcell_%arg-2%"
+					send "{@prefix} {@othercolor}Created a {@name} named {@maincolor}%arg-2%{@othercolor}!"
+
+			else if arg-1 is "invite":
+				if {crew::%uuid of player%} is not set:
+					send "{@prefix} {@othercolor}You're not in a {@name}!"
+				else if {crews::%{crew::%uuid of player%}%::leader} is not the player:
+					send "{@prefix} {@othercolor}You're not the leader of the {@name}!"
+				else if arg-2 is set:
+					set {_b} to arg-2 parsed as offline player
+					set {_u} to uuid of {_b}
+					if {_b} is player:
+						send "{@prefix} {@maincolor}You can't invite yourself!"
+					else if {members::%{crew::%uuid of player%}%::*} contains {_b}:
+						send "{@prefix} {@maincolor}This player is already in the {@name}"
+					else if {crew::%{_u}%} is set:
+						send "{@prefix} {@maincolor}This player is already in a {@name}"
+					else if {invites::%{_u}%::%{clan::%uuid of player%}%} is not true:
+						send "{@prefix} %player% {@othercolor}invited you to join {@maincolor}%{crew::%uuid of player%}%{@othercolor}!" to {_b}
+						send "{@prefix} {@maincolor}%player% {@othercolor}invited {@maincolor}%{_b}% {@othercolor}to the {@name}!" to all players where [{members::%{crew::%uuid of player%}%::*} contains input]
+						set {invites::%{_u}%::%{clan::%uuid of player%}%} to true
+					else:
+						delete {invites::%{_u}%::%{clan::%uuid of player%}%}
+						send "{@prefix} %player% {@othercolor}revoked your invite to {@maincolor}%{crew::%uuid of player%}%{@othercolor}!" to {_b}
+						send "{@prefix} {@maincolor}%player% {@othercolor}revoked {@maincolor}%{_b}%{@othercolor}'s invite to the {@name}!" to all players where [{members::%{crew::%uuid of player%}%::*} contains input]
+				else:
+					send "{@prefix} {@maincolor}/{@name} invite (player)"
+
+			else if arg-1 is "join":
+				if arg-2 is not set:
+					send "{@prefix} {@maincolor}/{@name} join (crew)"
+				else if {crew::%uuid of player%} is set:
+					send "{@prefix} {@maincolor}You're already in a {@name}"
+				else if {crews::*} does not contain arg-2:
+					send "{@prefix} {@maincolor}That {@name} doesn't exist!"
+					if {invites::%uuid of player%::%arg-2%} is set:
+						delete {invites::%uuid of player%::%arg-2%}
+				if {invites::%uuid of player%::%arg-2%} is true:
+					set {crew::%uuid of player%} to arg-2
+					send "{@prefix} {@maincolor}%player% {@othercolor}has joined the {@name}" to all players where [{members::%arg-2%::*} contains input]
+					add player to {members::%{crews::%arg-2%}%::*}
+					send "{@prefix} {@othercolor}You joined {@maincolor}%arg-2%{@othercolor}!"
+					delete {invites::%uuid of player%::%arg-2%}
+				else:
+					send "{@prefix} {@maincolor}You were not invited to this {@name}"
+
+			else if arg-1 is "leave":
+				if {crew::%uuid of player%} is not set:
+					send "{@prefix} {@maincolor}You're not in a {@name}!"
+				else if {crews::%{crew::%uuid of player%}%::leader} is player:
+					send "{@prefix} {@maincolor}You are the {@name} leader, use /{@name} disband"		
+				else:
+					send "{@prefix} {@othercolor}You have left {@maincolor}%{crew::%uuid of player%}%"
+					remove player from {members::%{crew::%uuid of player%}%::*}
+					send "{@prefix} {@maincolor}%player% {@othercolor}has left the {@name}!" to all players where [{members::%{crew::%uuid of player%}%::*} contains input]
+					delete {crew::%uuid of player%}
+					delete {crewchat::%uuid of player%}
+
+			else if arg-1 is "kick":
+				if {crew::%uuid of player%} is not set:
+					send "{@prefix} {@maincolor}You're not in a {@name}!"
+				else if {crews::%{crew::%uuid of player%}%::leader} is not player:
+					send "{@prefix} {@othercolor}You're not the {@name} leader!"
+				else:
+					set {_p} to arg-2 parsed as offline player
+					set {_u} to uuid of {_p}
+					if {members::%{clan::%uuid of player%}%::*} does not contain {_p}:
+						send "{@prefix} {@maincolor}%{_p}% {@maincolor}is not in your {@name}"
+					else if {_p} is player:
+						send "{@prefix} {@maincolor}You can't kick yourself!"
+					else:
+						remove {_p} from {members::%{crew::%uuid of player%}%::*}
+						delete {clanchat::%{_u}%}
+						delete {crew::%{_u}%}
+						send "{@prefix} {@maincolor}%player% {@othercolor}kicked you from the {@name}!" to {_p}
+						send "{@prefix} {@maincolor}%player% {@othercolor}kicked you from the {@name}!" to all players where [{members::%{crew::%uuid of player%}%::*} contains input]
+
+			else if arg-1 is "disband":
+				if {crew::%uuid of player%} is not set:
+					send "{@prefix} {@maincolor}You're not in a {@name}!"
+				else if {crews::%{crew::%uuid of player%}%::leader} is not player:
+					send "{@prefix} {@othercolor}You're not the {@name} leader!"
+				else if player's world is "zcell_%{crew::%uuid of player%}%":
+					send "{@prefix} {@maincolor}You can't do this while in your {@name} cell!"
+				else:
+					send "{@prefix} {@maincolor}%player% {@othercolor}has disbanded the {@maincolor}%{crew::%uuid of player%}% {@othercolor}{@name}!"
+					#Delete crew cell
+					execute console command "mv delete zcell_%{crew::%uuid of player%}%"
+					execute console command "mvconfirm"
+					remove {crew::%uuid of player%} from {pcells::*}
+					#delete crew balance
+					delete {crewbal::%{crew::%uuid of player%}%}
+					#Remove the crew from all registered crews
+					remove "%{crew::%uuid of player%}%" from {crews::*}
+					delete {crews::%{crew::%uuid of player%}%}
+					delete {crews::%{crew::%uuid of player%}%::*}
+					#Set all players crew to nothing
+					loop {members::%{crew::%uuid of player%}%::*}:
+						delete {crew::%uuid of loop-value%}
+						delete {crewchat::%uuid of loop-value%}
+					delete {members::%{crew::%uuid of player%}%::*}
+					delete {crew::%uuid of player%} 
+
+			else if arg-1 is "info":
+				if arg-2 is not set:
+					if {crew::%uuid of player%} is not set:
+						send "{@prefix} {@maincolor}You are not in a {@name}!"
+					else:
+						crewinfo(player, {crew::%uuid of player%})
+				else:
+					if {crews::*} contains arg-2:
+						crewinfo(player, arg-2)
+					else:
+						send "{@prefix} {@maincolor}There is no {@name} with that name!"
+			else if arg-1 is "chat":
+				if {crew::%uuid of player%} is not set:
+					send "{@prefix} {@maincolor}You're not in a {@name}!"
+				else if {clanchat::%uuid of player%} is true:
+					set {clanchat::%uuid of player%} to false
+					send "{@prefix} {@maincolor}Disabled {@othercolor}{@name} chat%nl%{@othercolor}Use the command again enable it!"
+				else:
+					set {clanchat::%uuid of player%} to true
+					send "{@prefix} {@maincolor}Enabled {@othercolor}{@name} chat%nl%{@othercolor}Use the command again enable it!"
+			else if arg-1 is "home":
+				if {crew::%uuid of player%} is not set:
+					send "{@prefix} {@maincolor}You're not in a {@name}!"
+				else:
+					execute console command "mv load zcell_%{crew::%uuid of player%}%"
+					send "{@prefix} {@othercolor}Sending you to your {@name} cell"
+					execute console command "mv tp %player% zcell_%{crew::%uuid of player%}%"
+			else if arg-1 is "balance" or "bal":
+				if {crew::%uuid of player%} is not set:
+					send "{@prefix} {@maincolor}You're not in a {@name}!"
+				else:
+					send "{@prefix} {@maincolor}%{crew::%uuid of player%}%{@othercolor}'s balance: {@maincolor}$%{crewbal::%{crew::%uuid of player%}%}%"
+
+			else if arg-1 is "withdraw":
+				if {crew::%uuid of player%} is not set:
+					send "{@prefix} {@maincolor}You're not in a {@name}!"
+				else if {crews::%{crew::%uuid of player%}%::leader} is not player:
+					send "{@prefix} {@othercolor}You're not the {@name} leader!"
+				else:
+					set {_amt} to arg-2 parsed as integer
+					if {_amt} <= 0:
+						send "{@prefix} {@maincolor}The number provided needs to be greater than 0"
+					else if {crewbal::%{crew::%uuid of player%}%} < {_amt}:
+						send "{@prefix} {@maincolor}Your {@name} doesn't have enough funds"
+					else:
+						remove {_amt} from {crewbal::%{crew::%uuid of player%}%}
+						message "{@prefix} {@othercolor}You withdrew {@maincolor}$%{_amt}%{@othercolor}!"
+						add {_amt} to player's balance
+			else if arg-1 is "deposit":
+				if {crew::%uuid of player%} is not set:
+					send "{@prefix} {@maincolor}You're not in a {@name}!"
+				else:
+					set {_amt} to arg-2 parsed as integer
+					if {_amt} <= 0:
+						send "{@prefix} {@maincolor}The number provided needs to be greater than 0"
+					else if player's balance < {_amt}:
+						send "{@prefix} {@maincolor}You don't have enough funds"
+					else:
+						remove {_amt} from player's balance
+						send "{@prefix} {@othercolor}You deposited {@othercolor}$%{_amt}%{@othercolor}!"
+						add {_amt} to {crewbal::%{crew::%uuid of player%}%}
 		else:
-			if arg-1 is "create" or "disband" or "join" or "leave" or "chat" or "invite" or "info" or "kick" or "home" or "cell" or "withdraw" or "deposit" or "balance" or "bal":
-				if arg-1 is "create":
-					if arg-2 is not set:
-						send "{@prefix} &d/clan create <name>"
-					else:
-						if length of arg-2 is greater than 8:
-							send "{@prefix} {@color}Clan names can only be up to &e8 {@color}characters."
-							stop
-						if arg 2 matches "[a-zA-Z]+":
-							if {clans::%player%} is not set:
-								if {Level::%player%} >= 10:
-									loop {clans::*}:
-										if loop-value is argument 2:
-											set {_n} to true
-									if {_n} is not set:
-										set {clans::%player%} to arg-2
-										set {clans::%{clans::%player%}%::owner} to the player
-										add player to {members::%player%::*}
-										add {clans::%player%} to {cells::*}
-										execute console command "mv clone cell_template_S3 zcell_%{clans::%player%}%"
-										send "{@prefix} &d%player% {@color}has created a clan named &d%arg-2%{@color}!"
-									else:
-										send "{@prefix} {@color}A clan with that name already exists!"
-								else:
-									send "{@prefix} {@color}You need to be level &c10 &7to create a clan!"
-							else:
-								send "{@prefix} {@color}You're already in a clan!"
-								
-						else:
-							send "{@prefix} {@color}Name must be &ealphabetical."
-							stop
-				if arg-1 is "disband":
-					if {clans::%player%} is not set:
-						send "{@prefix} {@color}You're not in a clan!"
-					else:
-						if {clans::%{clans::%player%}%::owner} is not the player:
-							send "{@prefix} {@color}You aren't the leader of your clan!"
-						else:
-							send "{@prefix} &d%player% {@color}has disbanded the &d%{clans::%player%}% {@color}clan!"
-							execute console command "mv delete zcell_%{clans::%player%}%"
-							delete {clanbal::%{clans::%player%}%}
-							loop {invited::%{clans::%player%}%::*}:
-								remove {clans::%player%} from {clansinvites::%loop-value%::*}
-							loop {members::%{clans::%{clans::%player%}%::owner}%::*}:
-								delete {clanchat::%loop-value%}
-								delete {clans::%loop-value%}
-								remove loop-value from {members::%player%::*}
-							delete {clans::%{clans::%player%}%::owner}
-							remove player from {members::%player%::*}
-				if arg-1 is "leave":
-					if {clans::%player%} is not set:
-						send "{@prefix} {@color}You're not in a clan!" 
-					else:
-						if {clans::%{clans::%player%}%::owner} is the player:
-							send "{@prefix} {@color}You cannot leave your own clan! Use /clan disband!"
-						else:
-							send "{@prefix} &e%player% {@color}has left the clan!"
-							loop {members::%{clans::%{clans::%player%}%::owner}%::*}:
-								set {_b} to "%loop-value%" parsed as an offline player
-								send "{@prefix} &e%player% {@color}has left the clan!" to {_b}
-								remove the player from {members::%{clans::%{clans::%player%}%::owner}%::*}
-								delete {clans::%player%}
-								delete {clanchat::%player%}
-				if arg-1 is "invite":
-					if {clans::%player%} is not set:
-						send "{@prefix} {@color}You're not in a clan!"
-					else:
-						if {clans::%{clans::%player%}%::owner} is not the player:
-							send "{@prefix} {@color}You're not the owner of the clan!"
-						else:
-							if arg-2 is set:
-								set {_b} to arg-2 parsed as an offline player
-								if {invited::%{clans::%player%}%::%arg-2%} is not set:
-									send "{@prefix} &e%player% {@color}invited you to join &e%{clans::%player%}%{@color}!" to {_b}
-									set {invited::%{clans::%player%}%::%arg-2%} to true
-									loop {members::%player%::*}:
-										set {_b2} to "%loop-value%" parsed as an offline player
-										send "{@prefix} &e%player% {@color}invited &e%arg-2% {@color}to the clan!" to {_b2}
-								else:
-									set {_b} to arg-2 parsed as an offline player
-									send "{@prefix} &e%player% {@color}revoked your invite." to {_b}
-									delete {invited::%{clans::%player%}%::%arg-2%}
-									loop {members::%player%::*}:
-										set {_b2} to "%loop-value%" parsed as an offline player
-										send "{@prefix} &e%player% {@color}revoked &e%arg-2%{@color}'s invite." to {_b2}
-							else:
-								send "{@prefix} {@color}/clan invite <player>"
-				if arg-1 is "join":
-					if arg-2 is not set:
-						send "{@prefix} {@color}/clan join <clan name>"
-					else:
-						if {clans::%player%} is set:
-							send "{@prefix} {@color}You're already in a clan!"
-						else:
-							loop {clans::*}:
-								if loop-value is arg-2:
-									set {_n} to true
-									stop loop
-								else:
-									set {_n} to false
-							if {_n} is false:
-								send "{@prefix} {@color}That clan doesn't exist!"
-							else:
-								if {invited::%arg-2%::%player%} is set:
-									set {clans::%player%} to arg-2
-									set {_player} to {clans::%{clans::%player%}%::owner}
-									set {clans::%player%} to {clans::%{_player}%}
-									loop {members::%{clans::%{clans::%player%}%::owner}%::*}:
-										set {_b} to "%loop-value%" parsed as an offline player
-										send "{@prefix} &e%player% {@color}joined the clan!" to {_b}
-									send "{@prefix} {@color}You joined the &e%arg-2% {@color}clan!"
-									add the player to {members::%{clans::%{clans::%player%}%::owner}%::*}
-									delete {invited::%arg-2%::%player%}
-								else:
-									send "{@prefix} {@color}You weren't invited to this clan!"
-				if arg-1 is "home" or "cell":
-					if {clans::%player%} is not set:
-						send "{@prefix} {@color}You aren't in a clan!"
-					else:
-						execute console command "mv load zcell_%{clans::%player%}%"
-						message "&a&oTeleporting you to you clan's cell..."
-						execute console command "mv tp %player% zcell_%{clans::%player%}%"
-				if arg-1 is "info":
-					if arg-2 is not set:
-						if {clans::%player%} is not set:
-							send "{@prefix} {@color}You are not in a clan!"
-						else:
-							send ""
-							send "&6%{clans::%player%}%'s Information:"
-							send ""
-							send "&eLeader: {@color}%{clans::%{clans::%player%}%::owner}%"
-							set {_m::*} to {members::%{clans::%{clans::%player%}%::owner}%::*}
-							remove {clans::%{clans::%player%}%::owner} from {_m::*}
-							if size of {_m::*} is greater than 0:
-								loop {_m::*}:
-									add loop-value to {_local1::*}
-								send "&eMembers: {@color}%{_local1::*}%"
-							send ""
-					else:
-						loop {clans::*}:
-							if {clans::*} contains argument 2:
-								send ""
-								send "&6%arg-2%'s Information:"
-								send ""
-								send "&eLeader: {@color}%{clans::%arg-2%::owner}%"
-								set {_m::*} to {members::%{clans::%arg-2%::owner}%::*}
-								remove {clans::%arg-2%::owner} from {_m::*}
-								if size of {_m::*} is greater than 0:
-									loop {_m::*}:
-										add loop-value-2 to {_local2::*}
-									send "&eMembers: {@color}%{_local2::*}%"
-								send ""
-								stop loop
-							else:
-								set {_f} to arg-2 parsed as an offline player
-								if {_f} has not played before:
-									send "{@prefix} {@color}There is no clan or player that exists by that name."
-									stop loop
-								else:
-									if {clans::%{_f}%} is not set:
-										send "{@prefix} {@color}That player isn't in a clan!"
-										stop loop
-									else:
-										send "&6%{clans::%arg-2%}%'s Information:"
-										send ""
-										send "&eLeader: {@color}%{clans::%{clans::%arg-2%}%::owner}%"
-										set {_m::*} to {members::%{clans::%{clans::%arg-2%}%::owner}%::*}
-										remove {clans::%{clans::%arg-2%}%::owner} from {_m::*}
-										if size of {_m::*} is greater than 0:
-											loop {_m::*}:
-												add loop-value-2 to {_local3::*}
-											send "&eMembers: {@color}%{_local3::*}%"
-										send ""
-										stop loop
-				if arg-1 is "chat":
-					if {clans::%player%} is not set:
-						send "{@prefix} {@color}You're not in a clan!"
-					else:
-						if {clanchat::%player%} is not set:
-							set {clanchat::%player%} to true
-							send "{@prefix} {@color}Enabled clan chat...%nl%{@color}Type this command again to disable it!"
-						else:
-							delete {clanchat::%player%}
-							send "{@prefix} {@color}Disabled clan chat...%nl%{@color}Type this command again to enable it!"
-				if arg-1 is "kick":
-					if {clans::%player%} is not set:
-						send "{@prefix} {@color}You're not in a clan!"
-					else:
-						if {clans::%{clans::%player%}%::owner} is not the player:
-							send "{@prefix} {@color}Only clan leaders can kick members!"
-						else:
-							set {_n} to arg-2 parsed as offline player
-							if {members::%player%::*} does not contain {_n}:
-								send "{@prefix} &e%arg-2% {@color}isn't in your clan!"
-							else:
-								if arg-2 is not the player:
-									remove {_n} from {members::%player%::*}
-									delete {clans::%arg-2%}
-									delete {clanchat::%arg-2%}
-									send "{@prefix} &e%player% {@color}kicked you from the clan!" to {_n}
-									loop {members::%player%::*}:
-										set {_n2} to "%loop-value%" parsed as offline player
-										send "{@prefix} &e%player% {@color}kicked &e%arg-2% {@color}from the clan!" to {_n2}
-								else:
-									send "{@prefix} {@color}You cannot kick yourself."
-				if arg-1 is "deposit":
-					if {clans::%player%} is not set:
-						message "{@prefix} &cYou must be in a clan to use this command."
-					else:
-						set {_amt} to arg-2 parsed as integer
-						if {_amt} is not between 1 and 1000000000000000000:
-							message "{@prefix} &cPlease ennter a valid number."
-						else:
-							if player's balance is less than {_amt}:
-								message "{@prefix} &cInsufficient funds."
-							else: 
-								add {_amt} to {clanbal::%{clans::%player%}%}
-								message "{@prefix} &aYou deposited $%{_amt}% &ainto your clan's account!"
-								remove {_amt} from player's balance
-				if arg-1 is "withdraw":
-					if {clans::%player%} is not set:
-						message "{@prefix} &cYou must be in a clan to use this command."
-					else:
-						if player is not {clans::%{clans::%player%}%::owner}:
-							message "{@prefix} &cOnly the clan leader can withdraw money!"
-						else:
-							set {_amt} to arg-2 parsed as integer
-							if {_amt} is not between 1 and 1000000000000000000:
-								message "{@prefix} &cPlease ennter a valid number."
-							else:
-								if {clanbal::%{clans::%player%}%} is less than {_amt}:
-									message "{@prefix} &cInsufficient clan funds."
-								else:
-									remove {_amt} from {clanbal::%{clans::%player%}%}
-									message "{@prefix} &aYou withdrawed $%{_amt}%&a!"
-									add {_amt} to player's balance
-				if arg-1 is "balance" or "bal":
-					if {clans::%player%} is not set:
-						message "{@prefix} &cYou must be in a clan to use this command."
-					else:
-						if {clanbal::%{clans::%player%}%} is not set:
-							set {clanbal::%{clans::%player%}%} to 0
-						message "{@prefix} &7Clan balance: &a$%{clanbal::%{clans::%player%}%}%"
-					   
-			else:  
-				send ""
-				send "&c&lMEMBER COMMANDS!"
-				send "&7• &c/clan create (name) {@color}&oCreates a clan."
-				send "&7• &c/clan join (name) {@color}&oAllows you to join clans."
-				send "&7• &c/clan leave {@color}&oAllows you to leave your clan."
-				send "&7• &c/clan chat {@color}&oToggles clan chat mode." 
-				send "&7• &c/clan home {@color}&oTeleports players to your clan home."
-				send "&7• &c/clan balance {@color}&oShows the balance of your clans bank."
-				send "&7• &c/clan level {@color}&oShows the level of your clan." 
-				if player is {clans::%{clans::%player%}%::owner}:
-					send "&c&lLEADER COMMANDS!"
-					send "&7• &c/clan invite (player) {@color}&oInvites a player to your clan"
-					send "&7• &c/clan kick (player) {@color}&oKicks a player from your clan."
-					send "&7• &c/clan deposit (amount) {@color}&oDeposits money into your clan. (Only Leader Can Withdraw)"
-					send "&7• &c/clan withdraw (amount) {@color}&oWithdraw money from your clan bank. (Only Leader Can Withdraw)"
-					send "" 
-				
-command /sethome [<text>]:
+			send ""
+			send "{@maincolor}&l{@titlename} COMMANDS!"
+			send "{@maincolor}/{@name} create (name) {@othercolor}&oCreates a {@name}."
+			send "{@maincolor}/{@name} join (name) {@othercolor}&oAllows you to join {@name}s."
+			send "{@maincolor}/{@name} leave {@othercolor}&oAllows you to leave your {@name}."
+			send "{@maincolor}/{@name} chat {@othercolor}&oToggles {@name} chat mode."
+			send "{@maincolor}/{@name} home {@othercolor}&oTeleports players to your {@name} home."
+			send "{@maincolor}/{@name} balance {@othercolor}&oShows the balance of your {@name}s bank."
+			send "{@maincolor}&l{@titlename} LEADER COMMANDS!"
+			send "{@maincolor}/{@name} invite (player) {@othercolor}&oInvites a player to your {@name}"
+			send "{@maincolor}/{@name} kick (player) {@othercolor}&oKicks a player from your {@name}."
+			send "{@maincolor}/{@name} deposit (amount) {@othercolor}&oDeposits money into your {@name}. (Only Leader Can Withdraw)"
+			send "{@maincolor}/{@name} withdraw (amount) {@othercolor}&oWithdraw money from your {@name} bank. (Only Leader Can Withdraw)"
+			send ""
+
+command /resetccell [<text>]:
 	trigger:
-		loop all players in radius 30 of player:
-			if {clans::%player%} is set:
-				if {clans::%player%} is not {clans::%loop-player%}:
-					send "&cYou are too close to players who are not in your clan!"
-					stop
-				else:
-					if arg-1 is set:
-						make player execute command "/essentials:sethome %arg-1%"
-						stop
-					else:
-						make player execute command "/essentials:sethome"
-						stop
- 
- 
+		if arg-1 is not set:
+			send "{@prefix} {@maincolor}/resetpcell <clan name/all>"
+		else if arg-1 is "all":
+			loop {ccells::*}:
+				execute console command "mv delete zcell_%loop-value%"
+				execute console command "mv confirm"
+			delete {ccells::*}
+			send "{@prefix} {@othercolor}Reset all cells!"
+		else:
+			if {ccells::*} does not contain arg-1:
+				send "{@prefix} {@maincolor}Unknown {@name}"
 			else:
-				if loop-player is not player:
-					send "&cYou are too close to players who are not in your clan!"
-					stop
-				else:
-					if arg-1 is set:
-						make player execute command "/essentials:sethome %arg-1%"
-						stop
-					else:
-						make player execute command "/essentials:sethome"
-						stop
- 
- 
-on damage:
-	if {clans::%victim%} is set:
-		if {clans::%victim%} is {clans::%attacker%}:
-			cancel event
-			send "{@prefix} &eThis player is in your clan!" to attacker
+				remove arg-1 from {ccells::*}
+				execute console command "mv delete zcell_%arg-1%"
+				execute console command "mv confirm"
+				send "{@prefix} {@othercolor}Reset {@maincolor}%arg-1%{@othercolor}'s cell"
+
+on quit:
+	if {crew::%uuid of player%} is set:
+		wait 90 seconds
+		loop {members::%{crew::%uuid of player%}%::*}:
+			if loop-value is online:
+				world of loop-value is "zcell_%{crew::%uuid of player%}%"
+				add player to {_cOnline::*}
+		if size of {_cOnline::*} < 1:
+			loop {_cOnline::*}:
+				teleport loop-value to location(505.5, 119, 7.5, world("ul_S31"), 51, 2)
+			execute console command "/mv unload zcell_%{crew::%uuid of player%}%"
+		else:
 			stop
- 
-on chat:
-	if {clanchat::%player%} is true:
-		cancel event
-		set {_members::*} to {members::%{clans::%{clans::%player%}%::owner}%::*}
-		send "&2&lCLAN &7[&b&l%{Prestige::%player%}%&7] &7[&c%{Level::%player%}%&7] %{display.rank.%UUID of player%}% &2%player%&8: &a%message%" to all players where [{_members::*} contains input]
-		# loop {members::%{clans::%{clans::%player%}%::owner}%::*}:
-		# 	send "&3&lCLAN &3%player% &b» &3%message%" to loop-value
-		# 	stop
-   
-# 	else if {clanchat::%player%} is not set:
-# 		if {clans::%player%} is set:
-# 			if {mutechat} is true:
-# 				if player has permission "staff.mc.bypass":
-# 					broadcast "&d• %{clans::%player%}% • &f%player's prefix%{@color}%player% %player's suffix%&8» {@color}%message%"
-# 					stop
-# 				else:
-# 					cancel event
-# 					send "&dClanned &8» &7The chat is currently muted!"
-# 			else if {mutechat} or {staffchat.%player%} is not set:
-# 				broadcast "&d• %{clans::%player%}% • &f%player's prefix%{@color}%player% %player's suffix%&8» {@color}%message%"
-# 				stop
-# 			if {staffchat.%player%} is true:
-# 				loop all players:
-# 					if loop-player has permission "staff.sc":
-# 						cancel event
-# 						send "&5STAFF CHAT &8» &7%player%: %message%" to loop-player
-# 		else:
-# 			if {mutechat} is true:
-# 				if player has permission "staff.mc.bypass":
-# 					broadcast "&f%player's prefix%{@color}%player% %player's suffix%&8» {@color}%message%"
-# 					stop
-# 				else:
-# 					cancel event
-# 					send "&dClanned &8» &7The chat is currently muted!"
-# 			else if {mutechat} or {staffchat.%player%} is not set:
-# 				broadcast "&f%player's prefix%{@color}%player% %player's suffix%&8» {@color}%message%"
-# 				stop
-# 			if {staffchat.%player%} is true:
-# 				loop all players:
-# 					if loop-player has permission "staff.sc":
-# 						cancel event
-# 						send "&5STAFF CHAT &8» &7%player%: %message%" to loop-player
+
+on mine:
+	event-world is "zcell_%{crew::%uuid of player%}%"
+	if event-block is not coal ore, iron ore, redstone ore, lapis ore, gold ore or diamond ore:
+		if player does not have permission "rank.srmod":
+			cancel event
+	else:
+		if player is sneaking:
+			cancel drops
+			if event-block is coal ore:
+				give player 1 of coal ore named "&8Coal &7Generator"
+				message "{@prefix} &aYou collected your &8Coal &7Generator&a!"
+			else if event-block is iron ore:
+				give player 1 of iron ore named "&fIron &7Generator"
+				message "{@prefix} &aYou collected your &fIron &7Generator&a!"
+			else if event-block is gold ore:
+				give player 1 of gold ore named "&6Gold &7Generator"
+				message "{@prefix} &aYou collected your &6Gold &7Generator&a!"
+			else if event-block is lapis ore:
+				give player 1 of lapis ore named "&9Lapis &7Generator"
+				message "{@prefix} &aYou collected your &9Lapis &7Generator&a!"
+			else if event-block is redstone ore:
+				give player 1 of redstone ore named "&4Redstone &7Generator"
+				message "{@prefix} &aYou collected your &4Redstone &7Generator&a!"
+			else if event-block is diamond ore:
+				give player 1 of diamond ore named "&bDiamond &7Generator"
+				message "{@prefix} &aYou collected your &bDiamond &7Generator&a!"
+		else:
+			set {_amt} to 1 + (1 * level of fortune of tool of player)
+			if event-block is coal ore:
+				cancel drops
+				give player {_amt} of coal
+				set event-block to light blue terracotta
+				wait 15 seconds
+				set event-block to coal ore
+				show mob spawner flames at event-block
+			if event-block is iron ore:
+				cancel drops
+				give player {_amt} of iron ingot
+				set event-block to light blue terracotta
+				wait 20 seconds
+				set event-block to iron ore
+				show mob spawner flames at event-block
+			if event-block is redstone ore:
+				cancel drops
+				give player {_amt} of redstone dust
+				set event-block to light blue terracotta
+				wait 20 seconds
+				set event-block to redstone ore
+				show mob spawner flames at event-block
+			if event-block is lapis ore:
+				cancel drops
+				give player {_amt} of lapis
+				set event-block to light blue terracotta
+				wait 15 seconds
+				set event-block to lapis ore
+				show mob spawner flames at event-block
+			if event-block is gold ore:
+				cancel drops
+				give player {_amt} of gold ingot
+				set event-block to light blue terracotta
+				wait 25 seconds
+				set event-block to gold ore
+				show mob spawner flames at event-block
+			if event-block is diamond ore:
+				cancel drops
+				give player {_amt} of diamond
+				set event-block to light blue terracotta
+				wait 15 seconds
+				set event-block to diamond ore
+				show mob spawner flames at event-block
+
+on place:
+	world is "zcell_%{crew::%uuid of player%}%"
+	if block below event-block is not concrete powder:
+		if player does not have permission "rank.srmod":
+			cancel event
+			message "{@prefix} &cYou cannot place blocks here!"
+	else:
+		if event-block is coal ore:
+			message "&aYou placed a &8Coal &7Generator&a!"
+		else if event-block is iron ore:
+			message "&aYou placed an &fIron &7Generator&a!"
+		else if event-block is gold ore:
+			message "&aYou placed a &6Gold &7Generator&a!"
+		else if event-block is lapis ore:
+			message "&aYou placed a &9Lapis &7Generator&a!"
+		else if event-block is redstone ore:
+			message "&aYou placed a &4Redstone &7Generator&a!"
+		else if event-block is diamond ore:
+			message "&aYou placed a &bDiamond &7Generator&a!"
+		else:
+			if player does not have permission "rank.srmod":
+				cancel event
